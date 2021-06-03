@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Convo-Z</string>
+    <string name="url_post_aws">http://18.220.83.47:8080/addAccount</string>
+    <string name="url_post">http://192.168.0.5:8080/addAccount</string>
+    <string name="url_logincheck">http://192.168.0.5:8080/loginCheck</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "938774708033",
+    "project_id": "convo-z",
+    "storage_bucket": "convo-z.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938774708033:android:5d12cb7b46a4d170406bc0",
+        "android_client_info": {
+          "package_name": "com.example.convo_z"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938774708033-n32jssmjordd78c00f1ardk46vmgalr0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.convo_z",
+            "certificate_hash": "8444f66ac3b46a3dfed06c270324a1214fd4b224"
+          }
+        },
+        {
+          "client_id": "938774708033-8pbshs2bhd4vokqqa2ob48mqsos077e4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4_kAVCJRrt84HSmAKh2RvGuHPksty5YQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938774708033-8pbshs2bhd4vokqqa2ob48mqsos077e4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
