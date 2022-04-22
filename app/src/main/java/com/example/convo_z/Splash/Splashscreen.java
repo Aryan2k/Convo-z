@@ -1,9 +1,11 @@
 package com.example.convo_z.Splash;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.example.convo_z.Login.LoginClass;
 import com.example.convo_z.MainActivity;
@@ -42,13 +45,14 @@ public class Splashscreen extends AppCompatActivity {
         logo.setAnimation(topAnim);
         slogan.setAnimation(bottomAnim);
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
                 SharedPreferences sp = getSharedPreferences("login", MODE_PRIVATE);
                 int logincheck = sp.getInt("lc", 0);
+
+          //      Log.d("dhoni", String.valueOf(logincheck));
 
                 if(logincheck==1)
               {

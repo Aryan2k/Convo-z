@@ -6,6 +6,10 @@
         android:id="@+id/settings"
         android:title="Settings" />
     <item
+        android:id="@+id/security"
+        android:title="Security" />
+    <item
         android:id="@+id/logout"
         android:title="Logout" />
+
 </menu>

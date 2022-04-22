@@ -23,6 +23,8 @@ import com.example.convo_z.Login.LoginClass;
 import com.example.convo_z.MainActivity;
 import com.example.convo_z.Model.Users;
 import com.example.convo_z.R;
+import com.example.convo_z.SettingsActivity;
+import com.example.convo_z.Verification.PhoneVerification;
 import com.example.convo_z.databinding.ActivitySignupBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -36,7 +38,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +88,14 @@ public class signupClass extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
 
+        binding.signupPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(signupClass.this, PhoneVerification.class);
+                i.putExtra("code","22"); //dummy value to avoid crash
+                startActivity(i);
+            }
+        });
 
         binding.google.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +120,7 @@ public class signupClass extends AppCompatActivity {
                            @Override
                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                               progressDialog.dismiss();
+                           //    progressDialog.dismiss();
 
                                if(task.isSuccessful())
                                {
@@ -118,26 +131,234 @@ public class signupClass extends AppCompatActivity {
                                    database.getReference().child("Users").child(id).setValue(user);
 
                                    Toast.makeText(getApplicationContext(), "Successfully Signed up!", Toast.LENGTH_SHORT).show();
+
+                                   checkProfileStatus(id);
                                }
                                else
                                {
                                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                   progressDialog.dismiss();
                                }
                            }
                        });
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(),"The Passwords don't match!",Toast.LENGTH_SHORT).show();
+                        binding.repassword.setError("The Passwords don't match!");
+                        binding.repassword.requestFocus();
+                       // Toast.makeText(getApplicationContext(),"The Passwords don't match!",Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                        return;
                     }
                 } else {
-                          Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
-                          progressDialog.dismiss();
+
+                    String result = emptydetector(binding.fullname.getText().toString().trim(), binding.email.getText().toString().trim(),
+                            binding.password.getText().toString().trim() ,binding.repassword.getText().toString().trim());
+
+                    //0=empty, 1= not empty
+                    //1111,1110,1101,1100,1011,1010,1001,1000,0111,0110,0101,0100,0011,0010,0001,0000
+
+                    switch (result) { //1111 not poss here
+
+                        case "1110":
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "1101":
+                            binding.password.setError("Enter your password");
+
+                            binding.password.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "1100":
+                            binding.password.setError("Enter your password");
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.password.requestFocus();
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "1011":
+                            binding.email.setError("Enter your email");
+
+                            binding.email.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "1010":
+                            binding.email.setError("Enter your email");
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.email.requestFocus();
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "1001":
+                            binding.email.setError("Enter your email");
+                            binding.password.setError("Enter your password");
+
+                            binding.email.requestFocus();
+                            binding.password.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "1000":
+                            binding.email.setError("Enter your email");
+                            binding.password.setError("Enter your password");
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.email.requestFocus();
+                            binding.password.requestFocus();
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0111":
+                            binding.fullname.setError("Enter your full name");
+
+                            binding.fullname.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0110":
+                            binding.fullname.setError("Enter your full name");
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.fullname.requestFocus();
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0101":
+                            binding.fullname.setError("Enter your full name");
+                            binding.password.setError("Enter your password");
+
+                            binding.fullname.requestFocus();
+                            binding.password.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0100":
+                            binding.fullname.setError("Enter your full name");
+                            binding.password.setError("Enter your password");
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.fullname.requestFocus();
+                            binding.password.requestFocus();
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0011":
+                            binding.fullname.setError("Enter your full name");
+                            binding.email.setError("Enter your email");
+
+                            binding.fullname.requestFocus();
+                            binding.email.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0010":
+                            binding.fullname.setError("Enter your full name");
+                            binding.email.setError("Enter your email");
+                            binding.repassword.setError("Enter your password again");
+
+                            binding.fullname.requestFocus();
+                            binding.email.requestFocus();
+                            binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                        case "0001":
+                            binding.fullname.setError("Enter your full name");
+                            binding.email.setError("Enter your email");
+                            binding.password.setError("Enter your password");
+
+                            binding.fullname.requestFocus();
+                            binding.email.requestFocus();
+                            binding.password.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+
+                            default: //0000
+                            binding.fullname.setError("Enter your full name");
+                            binding.email.setError("Enter your email");
+                            binding.password.setError("Enter your password");
+                            binding.repassword.setError("Enter your password again");
+
+                                binding.fullname.requestFocus();
+                                binding.email.requestFocus();
+                                binding.password.requestFocus();
+                                binding.repassword.requestFocus();
+
+                            progressDialog.dismiss();
+                            return;
+                    }
+
+
                 }
+
+                         // Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    public String emptydetector(String fullname, String email, String password, String repassword)
+    {
+        String result="";
+      if(fullname.isEmpty())
+      {
+          result+=0;
+      }
+      else{
+          result+=1;
+      }
+      if(email.isEmpty())
+      {
+          result+=0;
+      }
+      else
+      {
+          result+=1;
+      }
+      if(password.isEmpty())
+      {
+          result+=0;
+      }
+      else
+      {
+          result+=1;
+      }
+      if(repassword.isEmpty())
+      {
+          result+=0;
+      }
+      else
+      {
+          result+=1;
+      }
+      return result;
     }
 
         public void signinintent(View v)
@@ -198,28 +419,41 @@ public class signupClass extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            progressDialog.dismiss();
+                          //  progressDialog.dismiss();
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = auth.getCurrentUser();
-                            // updateUI(user);
+                          //  Log.d("TAG", "signInWithCredential:success");
+                            final FirebaseUser user = auth.getCurrentUser();
 
-                            Users users = new Users();
+                            database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override                 //to check if the user has already signed up with that google account
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(!snapshot.hasChild(user.getUid())) //if not,add it to db
+                                    {
+                                        Users users = new Users();
 
-                            users.setUserId(user.getUid());
-                            users.setUserName(user.getDisplayName());
-                            users.setProfilepic(user.getPhotoUrl().toString());
+                                        users.setUserId(user.getUid());
+                                        users.setUserName(user.getDisplayName());
+                                        users.setProfilepic(user.getPhotoUrl().toString());
+                                        database.getReference().child("Users").child(user.getUid()).setValue(users);
+                                    }
+                                }
 
-                            database.getReference().child("Users").child(user.getUid()).setValue(users);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            Intent i = new Intent(signupClass.this,MainActivity.class);
-                            startActivity(i);
+                                }
+                            });
 
-                            Toast.makeText(getApplicationContext(),"Signed up with google!",Toast.LENGTH_SHORT).show();
 
-                            SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                            sp.edit().putInt("lc",1).apply();
+                       //     Toast.makeText(getApplicationContext(),"Signed up with google!",Toast.LENGTH_SHORT).show();
 
+                       //     SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
+                        //    sp.edit().putInt("lc",1).apply();
+
+                       //     Intent i = new Intent(signupClass.this,MainActivity.class);
+                       //     startActivity(i);
+
+                            checkProfileStatus(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             progressDialog.dismiss();
@@ -232,4 +466,42 @@ public class signupClass extends AppCompatActivity {
                 });
     }
 
+    public void checkProfileStatus(final String userID)
+    {
+
+        database.getReference().child("Users").child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                progressDialog.dismiss();
+
+                if(snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) //profile already updated
+                {
+                    Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
+                    SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
+                    sp.edit().putInt("lc",1).apply();
+
+                    Intent i = new Intent(signupClass.this, MainActivity.class);
+                    startActivity(i);
+                }
+                else if(!snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) //google signup or email signup
+                {
+                    Intent i = new Intent(signupClass.this, PhoneVerification.class);
+                    i.putExtra("code","44");  //determines if this is an account linking case or new independent signin/up using phone
+                    startActivity(i);
+                }
+                else if (snapshot.child("phoneNumber").exists() && !snapshot.child("userName").exists())  //signup using phone
+                {
+                    Intent i = new Intent(signupClass.this, SettingsActivity.class);
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 }

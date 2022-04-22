@@ -2,7 +2,7 @@ package com.example.convo_z.Model;
 
 public class Users {
 
-    String profilepic,userName,email,password,userId,lastMessage;
+    String profilepic,userName,email,password,userId,lastMessage,phoneNumber,status;
 
     public String getUserId() {
         return userId;
@@ -12,13 +12,24 @@ public class Users {
         this.userId = userId;
     }
 
-    public Users(String profilepic, String userName, String email, String password, String userId, String lastMessage) {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public Users(String profilepic, String userName, String email, String password, String userId, String lastMessage, String phoneNumber, String status) {
         this.profilepic = profilepic;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.userId = userId;
         this.lastMessage = lastMessage;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
     }
 
     public Users(String userName, String email, String password) {
@@ -31,6 +42,13 @@ public class Users {
     public Users()
     {}
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getProfilepic() {
         return profilepic;

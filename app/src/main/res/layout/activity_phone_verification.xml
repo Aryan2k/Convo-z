@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#84E032"
+    tools:context=".Verification.PhoneVerification">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="241dp"
+        android:background="#84E032"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="285dp"
+            android:layout_height="180dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/screenshot_1700" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_below="@id/relativeLayout"
+        android:layout_marginTop="-7dp"
+        android:background="#84E032" />
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_below="@id/imageView"
+        android:layout_marginTop="-26dp"
+        android:background="@drawable/core_colour"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@id/textView"
+            android:layout_width="391dp"
+            android:layout_height="92dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="68dp"
+            android:gravity="center|center_horizontal|center_vertical"
+            android:text="Phone Number Verification"
+            android:textColor="@drawable/utility_colour"
+            android:textSize="20sp"
+            app:fontFamily="@font/candal" />
+
+        <EditText
+            android:id="@+id/editTextMobile"
+            android:layout_width="383dp"
+            android:layout_height="43dp"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_marginBottom="-52dp"
+            android:background="#e8f4f8"
+            android:ems="10"
+            android:fontFamily="@font/candal"
+            android:hint="10-Digit Phone Number"
+            android:includeFontPadding="false"
+            android:inputType="number"
+            android:paddingLeft="5dp"
+            android:textColorHint="	#989898" />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/verifyphone"
+        android:layout_width="159dp"
+        android:layout_height="39dp"
+        android:layout_alignBottom="@+id/container"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="119dp"
+        android:layout_marginRight="119dp"
+        android:layout_marginBottom="-74dp"
+
+        android:background="@drawable/general_button"
+        android:fontFamily="serif"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:text="Verify!"
+        android:textAlignment="center"
+        android:textColor="@drawable/utility_colour"
+        android:textSize="20sp"
+        app:layout_constraintVertical_bias="0.333" />
+</RelativeLayout>

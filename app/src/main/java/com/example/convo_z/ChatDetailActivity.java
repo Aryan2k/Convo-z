@@ -2,13 +2,9 @@ package com.example.convo_z;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,6 +15,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -63,7 +60,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         final ArrayList<MessagesModel> messagesModels = new ArrayList<>();
 
-        final ChatAdapter chatAdapter = new ChatAdapter(messagesModels,this);
+        final ChatAdapter chatAdapter = new ChatAdapter(messagesModels,this,receiverId);
         binding.chatRecyclerView.setAdapter(chatAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -82,6 +79,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                         for(DataSnapshot snapshot1 : snapshot.getChildren())
                         {
                             MessagesModel messagesModel = snapshot1.getValue(MessagesModel.class);
+                            messagesModel.setMessageID(snapshot1.getKey());
                             messagesModels.add(messagesModel);
                         }
                         chatAdapter.notifyDataSetChanged(); //notifies the adapter that a change has been made (onBindViewHolder)
@@ -100,32 +98,36 @@ public class ChatDetailActivity extends AppCompatActivity {
                 String msg = binding.editTextTextPersonName.getText().toString();
 
                 if (msg.trim().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Type something!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Type something!", Toast.LENGTH_SHORT).show();
+                    binding.editTextTextPersonName.setError("Type something!");
+                    binding.editTextTextPersonName.requestFocus();
+                    return;
                 }
                 else {
                     final MessagesModel model = new MessagesModel(senderId, msg);
                     model.setTimestamp(new Date().getTime());
+                    model.setMessage_status("1"); //message active
                     binding.editTextTextPersonName.setText("");
 
-                    database.getReference().child("Chats").child(senderRoom)
-                            .push()
-                            .setValue(model)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                    database.getReference().child("Chats").child(receiverRoom)
-                                            .push()
+                                    final DatabaseReference pushedPostRef = database.getReference().child("Chats").child(receiverRoom).push();
+                                                                                 //pushedPostRef stores the entire link of where data will be
+                                                                                 //-pushed: Chats-receiverRoom-messageIdOfReceiver
+                                             pushedPostRef
                                             .setValue(model)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
+                                                    model.setMessageID_receiver(pushedPostRef.getKey()); //gets only the messageIdOfReceiver
+                                                    database.getReference().child("Chats").child(senderRoom)
+                                                            .push()
+                                                            .setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
 
+                                                        }
+                                                    });
                                                 }
                                             });
-                                }
-                            });
-
                 }
             }
         });

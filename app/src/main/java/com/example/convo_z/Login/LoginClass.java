@@ -20,9 +20,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.convo_z.MainActivity;
+import com.example.convo_z.Model.MessagesModel;
 import com.example.convo_z.Model.Users;
 import com.example.convo_z.R;
+import com.example.convo_z.SettingsActivity;
 import com.example.convo_z.Signup.signupClass;
+import com.example.convo_z.Verification.PhoneVerification;
 import com.example.convo_z.databinding.ActivityLoginBinding;
 import com.example.convo_z.databinding.ActivitySignupBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,7 +40,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +59,8 @@ public class LoginClass extends AppCompatActivity {
 
     private static final String ALGORITHM = "AES";
     private static final String KEY = "1Hbfh667adfDEJ78";
+
+
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -79,6 +87,16 @@ public class LoginClass extends AppCompatActivity {
         progressDialog.setTitle("Logging in User");
         progressDialog.setMessage("We're signing you in!");
 
+
+        loginBinding.signinPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginClass.this,PhoneVerification.class);
+                i.putExtra("code","22"); //dummy value to avoid crash
+                startActivity(i);
+            }
+        });
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -99,27 +117,53 @@ public class LoginClass extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    progressDialog.dismiss();
+                                //    progressDialog.dismiss();
 
                                     if(task.isSuccessful()) {
 
-                                        SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                                        sp.edit().putInt("lc",1).apply();
+                                      //  SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
+                                       // sp.edit().putInt("lc",1).apply();
 
-                                        Intent i = new Intent(LoginClass.this, MainActivity.class);
-                                        startActivity(i);
+                                        checkProfileStatus(FirebaseAuth.getInstance().getUid());
+
+                                     //   Intent i = new Intent(LoginClass.this, MainActivity.class);
+                                     //   startActivity(i);
                                     }
                                     else
                                     {
                                         Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
                                     }
                                 }
                             });
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    if(loginBinding.emailL.getText().toString().trim().isEmpty() && !loginBinding.passwordL.getText().toString().trim().isEmpty())
+                    {
+                        loginBinding.emailL.setError("Enter your email");
+                        loginBinding.emailL.requestFocus();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    else if(!loginBinding.emailL.getText().toString().trim().isEmpty() && loginBinding.passwordL.getText().toString().trim().isEmpty())
+                    {
+                        loginBinding.passwordL.setError("Enter your password");
+                        loginBinding.passwordL.requestFocus();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    else
+                    {
+                        loginBinding.emailL.setError("Enter your email");
+                        loginBinding.passwordL.setError("Enter your password");
+                        loginBinding.emailL.requestFocus();
+                        loginBinding.passwordL.requestFocus();
+                        progressDialog.dismiss();
+                        return;
+                    }
+                  //  Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
+                  //  progressDialog.dismiss();
                 }
             }
         });
@@ -192,6 +236,7 @@ public class LoginClass extends AppCompatActivity {
             }
         }
     }
+
     public void signupintent(View v)
     {
         Intent i = new Intent(LoginClass.this, signupClass.class);
@@ -244,36 +289,44 @@ public class LoginClass extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        auth.signInWithCredential(credential)
+
+
+        final AuthCredential[] credential = {GoogleAuthProvider.getCredential(idToken, null)};
+        auth.signInWithCredential(credential[0])
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-                            progressDialog.dismiss();
-
+                         //   progressDialog.dismiss();
+                            final FirebaseUser user = auth.getCurrentUser();
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = auth.getCurrentUser();
-                           // updateUI(user);
 
-                            Users users = new Users();
+                            database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override                 //to check if the user has already signed up with that google account
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(!snapshot.hasChild(user.getUid())) //if not,add it to db
+                                    {
+                                        Users users = new Users();
+                                         users.setUserId(user.getUid());
+                                         users.setUserName(user.getDisplayName());
+                                         users.setProfilepic(user.getPhotoUrl().toString());
+                                        database.getReference().child("Users").child(user.getUid()).setValue(users);
+                                        Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
 
-                            users.setUserId(user.getUid());
-                            users.setUserName(user.getDisplayName());
-                            users.setProfilepic(user.getPhotoUrl().toString());
+                                      //  SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
+                                      //  sp.edit().putInt("lc",1).apply();
 
-                            database.getReference().child("Users").child(user.getUid()).setValue(users);
+                                    }
+                                }
 
-                            Intent i = new Intent(LoginClass.this,MainActivity.class);
-                            startActivity(i);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-                            SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                            sp.edit().putInt("lc",1).apply();
-
+                            checkProfileStatus(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
 
@@ -283,7 +336,46 @@ public class LoginClass extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
                            // updateUI(null);
                         }
-                    }
-                });
+            }
+        });
+    }
+
+    public void checkProfileStatus(final String userID)
+    {
+
+        database.getReference().child("Users").child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                progressDialog.dismiss();
+
+                if(snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) //profile already updated
+                {
+                    Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
+                    SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
+                    sp.edit().putInt("lc",1).apply();
+
+                    Intent i = new Intent(LoginClass.this, MainActivity.class);
+                    startActivity(i);
+                }
+                else if(!snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) //google signup or email signup
+                {
+                    Intent i = new Intent(LoginClass.this, PhoneVerification.class);
+                    i.putExtra("code","44"); //determines if this is an account linking case or new independent signin/up using phone
+                    startActivity(i);
+                }
+                else if (snapshot.child("phoneNumber").exists() && !snapshot.child("userName").exists())  //signup using phone
+                        {
+                            Intent i = new Intent(LoginClass.this, SettingsActivity.class);
+                            startActivity(i);
+                        }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

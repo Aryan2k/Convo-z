@@ -113,7 +113,7 @@
         android:id="@+id/signup"
         android:layout_width="159dp"
         android:layout_height="39dp"
-        android:background="#922BAD"
+        android:background="@drawable/general_button"
         android:fontFamily="serif"
         android:gravity="center|center_horizontal|center_vertical"
         android:text="SIGN UP!"
@@ -127,11 +127,11 @@
         app:layout_constraintVertical_bias="0.333" />
 
     <Button
-        android:id="@+id/signup_phone"
+        android:id="@+id/signupPhone"
         android:layout_width="215dp"
         android:layout_height="41dp"
         android:layout_marginBottom="8dp"
-        android:background="#922BAD"
+        android:background="@drawable/general_button"
         android:fontFamily="serif"
         android:gravity="center|center_horizontal|center_vertical"
         android:text="SIGN UP USING PHONE"
