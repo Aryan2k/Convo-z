@@ -54,13 +54,12 @@ public class ChatsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.chatRecyclerView.setLayoutManager(layoutManager);
 
-        //this adds users to the list whenever there's a change in firebase db (order of code doesn't matter here)
+        //this adds users to the list whenever there's a change in firebase db.
         database.getReference().child("Users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 ArrayList<String> contacts= new ArrayList<>();
-                contacts.clear();
 
                 Cursor phones = null;
                 try {
@@ -88,8 +87,6 @@ public class ChatsFragment extends Fragment {
                         {
                             phoneNumber = "+"+phoneNumber;
                         }
-
-                        Log.d("rofl", phoneNumber);
 
                        // HashMap<String,Object> obj = new HashMap<>();
                        // obj.put("name",name);

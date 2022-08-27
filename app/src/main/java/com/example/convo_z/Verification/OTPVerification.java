@@ -77,22 +77,23 @@ public class OTPVerification extends AppCompatActivity {
 
         //getting mobile number from the previous activity
         //and sending the verification code to the number
-        Intent intent = getIntent();
+
+         Intent intent = getIntent();
          mobile = intent.getStringExtra("mobile");
+
          sendVerificationCode(mobile);
          passcode= intent.getStringExtra("code");  //determines if this is an account linking case or new independent signin/up using phone
 
-        //Log.d("lmao",passcode);
-
-        //if the automatic sms detection did not work, user can also enter the code manually
+        //if the automatic sms detection does not work, user can also enter the code manually
         //so adding a Onclick listener to the button
 
         binding2.verifyotp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String code = editTextCode.getText().toString().trim();
-                if (code.isEmpty() || code.length() < 6) {
-                    editTextCode.setError("Enter valid code");
+
+                if (code.length()!= 6) {
+                    editTextCode.setError("Enter the valid 6-digit code");
                     editTextCode.requestFocus();
                     return;
                 }
@@ -103,10 +104,10 @@ public class OTPVerification extends AppCompatActivity {
 
     }
 
-    //the callback to detect the verification status
+    //the callback to detect the verification status automatically
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) { //code sent,verify it.
 
             //Getting the code sent by SMS
             String code = phoneAuthCredential.getSmsCode();
@@ -114,6 +115,7 @@ public class OTPVerification extends AppCompatActivity {
             //sometime the code is not detected automatically
             //in this case the code will be null
             //so user has to manually enter the code
+
             if (code != null) {
                 editTextCode.setText(code);
                 //verifying the code
@@ -122,7 +124,7 @@ public class OTPVerification extends AppCompatActivity {
         }
 
         @Override
-        public void onVerificationFailed(FirebaseException e) {
+        public void onVerificationFailed(FirebaseException e) { // if SHA configuration is wrong,etc. Code likely couldn't be sent.
             Toast.makeText(OTPVerification.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
@@ -135,9 +137,10 @@ public class OTPVerification extends AppCompatActivity {
         }
     };
 
-    //this method is sending verification code
+    //this method sends verification code
     //the country id is concatenated
-    //you can take the country id as user input as well
+    // can take the country id as user input as well
+
     private void sendVerificationCode(String mobile) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 "+91" + mobile,
@@ -178,9 +181,6 @@ public class OTPVerification extends AppCompatActivity {
 
                             final String id = task.getResult().getUser().getUid();
 
-                           // SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                          //  sp.edit().putInt("lc",1).apply();
-
                             database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override    //to check if the user has already signed up with that account
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -195,8 +195,11 @@ public class OTPVerification extends AppCompatActivity {
                                                 "/o/ic_user.xml?alt=media&token=21f1893e-535e-4c25-9d39-345370395d88");  //default
 
                                         users.setPhoneNumber("+91"+mobile);
+                                        users.setUserId(id);
+
                                         database.getReference().child("Users").child(id).setValue(users);
                                         progressDialog.dismiss();
+
                                         Intent i = new Intent(OTPVerification.this, SettingsActivity.class);
                                         i.putExtra("disableHome","30"); //to disable home button
                                         startActivity(i);
@@ -219,8 +222,6 @@ public class OTPVerification extends AppCompatActivity {
                                 }
                             });
 
-                          //  Log.d("lul",String.valueOf(passcode));
-
                         } else {
 
                             //verification unsuccessful.. display an error message
@@ -228,10 +229,10 @@ public class OTPVerification extends AppCompatActivity {
                             String message = "Something is wrong, we will fix it soon...";
 
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                message = "Invalid code entered...";
+                                message = "Invalid code entered!";
                             }
 
-                            Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_LONG);
+                            Snackbar snackbar = Snackbar.make(binding2.container, message, Snackbar.LENGTH_LONG);
                             snackbar.setAction("Dismiss", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -269,8 +270,8 @@ public class OTPVerification extends AppCompatActivity {
                         }
                     }
                 });
-
     }
+
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);

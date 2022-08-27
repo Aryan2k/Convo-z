@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     ProgressDialog progressDialog;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[]{Manifest.permission.READ_CONTACTS},
                 1);
-
     }
 
     @Override
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -101,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted!.
 
                     binding.viewPager.setAdapter(new FragmentsAdapter(getSupportFragmentManager()));
                     binding.tablayout.setupWithViewPager(binding.viewPager);
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         };
 
                         Handler pdCanceller = new Handler();
-                        pdCanceller.postDelayed(progressRunnable, 2500);
+                        pdCanceller.postDelayed(progressRunnable, 2000);
                     }
 
                 } else {

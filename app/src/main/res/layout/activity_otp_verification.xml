@@ -70,7 +70,7 @@
             android:fontFamily="@font/candal"
             android:hint="Enter the One-Time Password"
             android:includeFontPadding="false"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:paddingLeft="5dp"
             android:textColorHint="	#989898" />
 

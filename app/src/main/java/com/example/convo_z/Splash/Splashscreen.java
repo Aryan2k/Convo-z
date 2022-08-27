@@ -27,7 +27,6 @@ public class Splashscreen extends AppCompatActivity {
     ImageView logo;
     TextView slogan;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +50,6 @@ public class Splashscreen extends AppCompatActivity {
 
                 SharedPreferences sp = getSharedPreferences("login", MODE_PRIVATE);
                 int logincheck = sp.getInt("lc", 0);
-
-          //      Log.d("dhoni", String.valueOf(logincheck));
 
                 if(logincheck==1)
               {

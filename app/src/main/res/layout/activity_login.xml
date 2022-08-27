@@ -67,7 +67,7 @@
             app:fontFamily="@font/candal" />
 
         <EditText
-            android:id="@+id/email_L"
+            android:id="@+id/emailL"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginLeft="5dp"
@@ -82,7 +82,7 @@
             android:textColorHint="	#989898" />
 
         <EditText
-            android:id="@+id/password_L"
+            android:id="@+id/passwordL"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginLeft="5dp"
@@ -129,7 +129,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/signup_L"
+        android:id="@+id/signupL"
         android:layout_width="163dp"
         android:layout_height="35dp"
         android:background="@drawable/general_button"
@@ -147,7 +147,7 @@
         app:layout_constraintVertical_bias="0.887" />
 
     <Button
-        android:id="@+id/signin_L"
+        android:id="@+id/signinL"
         android:layout_width="163dp"
         android:layout_height="35dp"
         android:background="@drawable/general_button"
@@ -175,7 +175,7 @@
         app:layout_constraintVertical_bias="0.681">
 
         <Button
-            android:id="@+id/google_l"
+            android:id="@+id/googleL"
             android:layout_width="124dp"
             android:layout_height="match_parent"
             android:layout_marginRight="3dp"
@@ -190,7 +190,7 @@
             android:textColor="#000000" />
 
         <Button
-            android:id="@+id/facebook_l"
+            android:id="@+id/facebookL"
             android:layout_width="130dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="3dp"

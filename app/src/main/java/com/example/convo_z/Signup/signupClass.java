@@ -82,7 +82,7 @@ public class signupClass extends AppCompatActivity {
         progressDialog.setMessage("We're signing you up!");
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("938774708033-8pbshs2bhd4vokqqa2ob48mqsos077e4.apps.googleusercontent.co")
                 .requestEmail()
                 .build();
 
@@ -93,6 +93,14 @@ public class signupClass extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(signupClass.this, PhoneVerification.class);
                 i.putExtra("code","22"); //dummy value to avoid crash
+                startActivity(i);
+            }
+        });
+
+        binding.signinn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(signupClass.this, LoginClass.class);
                 startActivity(i);
             }
         });
@@ -128,6 +136,9 @@ public class signupClass extends AppCompatActivity {
                                            binding.email.getText().toString().trim(),binding.password.getText().toString().trim());
 
                                    String id = task.getResult().getUser().getUid();
+
+                                   user.setUserId(id);
+
                                    database.getReference().child("Users").child(id).setValue(user);
 
                                    Toast.makeText(getApplicationContext(), "Successfully Signed up!", Toast.LENGTH_SHORT).show();
@@ -361,12 +372,6 @@ public class signupClass extends AppCompatActivity {
       return result;
     }
 
-        public void signinintent(View v)
-       {
-        Intent i = new Intent(signupClass.this, LoginClass.class);
-        startActivity(i);
-       }
-
  /*       public static String encrypt (String value) throws Exception
         {
             Key key = generateKey();
@@ -405,6 +410,7 @@ public class signupClass extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
+
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("TAG", "Google sign in failed", e);
@@ -419,9 +425,8 @@ public class signupClass extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                          //  progressDialog.dismiss();
-                            // Sign in success, update UI with the signed-in user's information
-                          //  Log.d("TAG", "signInWithCredential:success");
+
+                            Log.d("TAG", "signInWithCredential:success");
                             final FirebaseUser user = auth.getCurrentUser();
 
                             database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -444,23 +449,12 @@ public class signupClass extends AppCompatActivity {
                                 }
                             });
 
-
-                       //     Toast.makeText(getApplicationContext(),"Signed up with google!",Toast.LENGTH_SHORT).show();
-
-                       //     SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                        //    sp.edit().putInt("lc",1).apply();
-
-                       //     Intent i = new Intent(signupClass.this,MainActivity.class);
-                       //     startActivity(i);
-
                             checkProfileStatus(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             progressDialog.dismiss();
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
                             Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-
-                            // updateUI(null);
                         }
                     }
                 });

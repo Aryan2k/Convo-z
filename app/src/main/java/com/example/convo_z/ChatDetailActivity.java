@@ -52,7 +52,6 @@ public class ChatDetailActivity extends AppCompatActivity {
         binding.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i = new Intent(ChatDetailActivity.this,MainActivity.class);
                 startActivity(i);
             }
@@ -69,7 +68,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         final String senderRoom = senderId + receiverId;
         final String receiverRoom = receiverId + senderId;
 
-        //this adds messages to messagesModels(list) whenever there's a change in firebase db (order of code doesn't matter here)
+        //this adds messages to messagesModels(list) whenever there's a change in firebase db.
         database.getReference().child("Chats").child(senderRoom)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

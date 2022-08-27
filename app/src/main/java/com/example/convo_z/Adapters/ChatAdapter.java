@@ -108,7 +108,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
                                             .child(messagesModel.getMessageID())
                                             .child("message_status")
                                             .setValue(messagesModel.getMessage_status());                      //updated in db
-
                                 }
                             }).setNegativeButton("Don't Delete", new DialogInterface.OnClickListener() {
                         @Override
@@ -142,7 +141,7 @@ public class ChatAdapter extends RecyclerView.Adapter{
                                     .child("message")
                                     .setValue(receiverdelete);
 
-                            messagesModel.setMessage_status("0"); //indicates that the message was deleted but we have not updated this in db
+                            messagesModel.setMessage_status("0"); //indicates that the message was deleted but we have not updated this in db yet.
 
                             database.getReference().child("Chats").child(senderRoom)  //updated in db
                                     .child(messagesModel.getMessageID())
@@ -153,7 +152,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
                                     .child(messagesModel.getMessageID_receiver())
                                     .child("message_status")
                                     .setValue(messagesModel.getMessage_status());  //message deleted for receiver as well
-
                         }
                     }).show();
                 }
@@ -205,8 +203,8 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
         if(holder.getClass()== SenderViewHolder.class) {   //message was sent by logged-in user
 
-            if(!messagesModel.getMessage().equals("")) {
-
+            if(!messagesModel.getMessage().equals(""))
+            {
                 if(messagesModel.getMessage_status().equals("1")) { //undeleted messages will show as usual
                     ((SenderViewHolder) (holder)).senderMsg.setText(messagesModel.getMessage());
                     String date = new java.text.SimpleDateFormat("dd/MM/yyyy  HH:mm:ss").format(new java.util.Date(messagesModel.getTimestamp()));
@@ -232,7 +230,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
         }
         else   //message was sent by the other user
         {
-          //  Log.d("virat", messagesModel.getMessage());
             if(!messagesModel.getMessage().equals("")) {
                 if(messagesModel.getMessage_status().equals("1")) {         //undeleted messages will show as usual
                     ((ReceiverViewHolder) (holder)).receiverMsg.setText(messagesModel.getMessage());

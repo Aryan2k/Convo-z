@@ -57,10 +57,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class LoginClass extends AppCompatActivity {
 
-    private static final String ALGORITHM = "AES";
-    private static final String KEY = "1Hbfh667adfDEJ78";
-
-
+   // private static final String ALGORITHM = "AES";
+   // private static final String KEY = "1Hbfh667adfDEJ78";
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -80,13 +78,11 @@ public class LoginClass extends AppCompatActivity {
         getSupportActionBar().hide();
 
         auth = FirebaseAuth.getInstance();
-
         database = FirebaseDatabase.getInstance();
 
         progressDialog = new ProgressDialog(LoginClass.this);
         progressDialog.setTitle("Logging in User");
         progressDialog.setMessage("We're signing you in!");
-
 
         loginBinding.signinPhone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +94,7 @@ public class LoginClass extends AppCompatActivity {
         });
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("938774708033-8pbshs2bhd4vokqqa2ob48mqsos077e4.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -120,14 +116,7 @@ public class LoginClass extends AppCompatActivity {
                                 //    progressDialog.dismiss();
 
                                     if(task.isSuccessful()) {
-
-                                      //  SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                                       // sp.edit().putInt("lc",1).apply();
-
                                         checkProfileStatus(FirebaseAuth.getInstance().getUid());
-
-                                     //   Intent i = new Intent(LoginClass.this, MainActivity.class);
-                                     //   startActivity(i);
                                     }
                                     else
                                     {
@@ -162,8 +151,6 @@ public class LoginClass extends AppCompatActivity {
                         progressDialog.dismiss();
                         return;
                     }
-                  //  Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
-                  //  progressDialog.dismiss();
                 }
             }
         });
@@ -177,6 +164,7 @@ public class LoginClass extends AppCompatActivity {
 
     }
 
+/*
    public void login(View v) throws Exception {
 
         //   EditText phone = (EditText)(findViewById(R.id.editTextTextPersonName));
@@ -198,7 +186,7 @@ public class LoginClass extends AppCompatActivity {
 
             JSONObject object = new JSONObject(params);
 
-           /* JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.POST, url_logincheck, object, new Response.Listener<JSONObject>() {
+           / JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.POST, url_logincheck, object, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
 
@@ -229,13 +217,14 @@ public class LoginClass extends AppCompatActivity {
                 }
             });
             requestQueue.add(objectRequest);
-        }*/
+        }
             //else
             {
                 Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
             }
         }
     }
+*/
 
     public void signupintent(View v)
     {
@@ -277,19 +266,19 @@ public class LoginClass extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // Google Sign In was successful.
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
+
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
+                // Google Sign In failed.
                 Log.w("TAG", "Google sign in failed", e);
             }
         }
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-
 
         final AuthCredential[] credential = {GoogleAuthProvider.getCredential(idToken, null)};
         auth.signInWithCredential(credential[0])
@@ -300,23 +289,19 @@ public class LoginClass extends AppCompatActivity {
 
                          //   progressDialog.dismiss();
                             final FirebaseUser user = auth.getCurrentUser();
-                            // Sign in success, update UI with the signed-in user's information
 
                             database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override                 //to check if the user has already signed up with that google account
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if(!snapshot.hasChild(user.getUid())) //if not,add it to db
                                     {
-                                        Users users = new Users();
+                                         Users users = new Users();
                                          users.setUserId(user.getUid());
                                          users.setUserName(user.getDisplayName());
                                          users.setProfilepic(user.getPhotoUrl().toString());
+
                                         database.getReference().child("Users").child(user.getUid()).setValue(users);
                                         Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
-
-                                      //  SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                                      //  sp.edit().putInt("lc",1).apply();
-
                                     }
                                 }
 
@@ -334,7 +319,7 @@ public class LoginClass extends AppCompatActivity {
 
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
                             Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                           // updateUI(null);
+
                         }
             }
         });
@@ -351,7 +336,7 @@ public class LoginClass extends AppCompatActivity {
 
                 if(snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) //profile already updated
                 {
-                    Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Sign in successful!",Toast.LENGTH_SHORT).show();
                     SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
                     sp.edit().putInt("lc",1).apply();
 

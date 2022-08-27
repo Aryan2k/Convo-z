@@ -211,12 +211,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/signinn"
         android:layout_width="219dp"
         android:layout_height="24dp"
         android:background="#84E032"
         android:fontFamily="@font/candal"
-        android:onClick="signinintent"
         android:text="Click here to sign in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
