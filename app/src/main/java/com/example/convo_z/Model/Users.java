@@ -1,8 +1,79 @@
 package com.example.convo_z.Model;
 
-public class Users {
+import org.json.JSONObject;
 
-    String profilepic,userName,email,password,userId,lastMessage,phoneNumber,status;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
+public class Users implements Serializable {
+
+    String profilePic;
+    String userName;
+    String email;
+    String password;
+    String userId;
+    String lastSeen;
+    String phoneNumber;
+    String bio;
+    ArrayList<HashMap<String,Object>> status;
+    ArrayList<String> muted; //status muted
+    ArrayList<String> blocked;
+    ArrayList<String> hidden; //status hidden
+
+    public Users(String profilePic, String userName, String email, String password, String userId, String lastSeen, String phoneNumber, String bio,ArrayList<HashMap<String,Object>> status,ArrayList<String> muted,ArrayList<String> blocked,ArrayList<String> hidden) {
+        this.profilePic = profilePic;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.userId = userId;
+        this.lastSeen = lastSeen;
+        this.phoneNumber = phoneNumber;
+        this.bio = bio;
+        this.status = status;
+        this.muted = muted;
+        this.blocked = blocked;
+        this.hidden = hidden;
+    }
+
+    public Users(String userName, String email, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public ArrayList<String> getMuted() {
+        return muted;
+    }
+
+    public ArrayList<String> getBlocked() {
+        return blocked;
+    }
+
+    public ArrayList<String> getHidden() {
+        return hidden;
+    }
+
+    public void setHidden(ArrayList<String> hidden) {
+        this.hidden = hidden;
+    }
+
+    public void setBlocked(ArrayList<String> blocked) {
+        this.blocked = blocked;
+    }
+
+    public void setMuted(ArrayList<String> muted) {
+        this.muted = muted;
+    }
+
+    public ArrayList<HashMap<String,Object>> getStatus() {
+        return status;
+    }
+
+    public void setStatus(ArrayList<HashMap<String,Object>> status) {
+        this.status = status;
+    }
 
     public String getUserId() {
         return userId;
@@ -12,31 +83,12 @@ public class Users {
         this.userId = userId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getBio() {
+        return bio;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-
-    public Users(String profilepic, String userName, String email, String password, String userId, String lastMessage, String phoneNumber, String status) {
-        this.profilepic = profilepic;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.userId = userId;
-        this.lastMessage = lastMessage;
-        this.phoneNumber = phoneNumber;
-        this.status = status;
-    }
-
-    public Users(String userName, String email, String password) {
-
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public Users()
@@ -50,12 +102,12 @@ public class Users {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getProfilepic() {
-        return profilepic;
+    public String getProfilePic() {
+        return profilePic;
     }
 
-    public void setProfilepic(String profilepic) {
-        this.profilepic = profilepic;
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     public String getUserName() {
@@ -82,15 +134,11 @@ public class Users {
         this.password = password;
     }
 
-
-
-    public String getLastMessage() {
-        return lastMessage;
+    public String getLastSeen() {
+        return lastSeen;
     }
 
-    public void setLastMessage(String lastMessage) {
-        this.lastMessage = lastMessage;
+    public void setLastSeen(String lastSeen) {
+        this.lastSeen = lastSeen;
     }
-
-
 }

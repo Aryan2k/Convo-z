@@ -3,21 +3,72 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/bg_edittext.xml" value="0.1745" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/bg_edittext_tp.xml" value="0.1625" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/bg_jjh.xml" value="0.1745" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/dpborder.xml" value="0.1035" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic__.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.1535" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_baseline_keyboard_arrow_down_24.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_baseline_keyboard_arrow_up_24.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_camera.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_camera_2.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_camera_3.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_delete.xml" value="0.1725" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_eye_2.xml" value="0.1725" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_eye_crossed.xml" value="0.1725" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_home.xml" value="0.1535" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_pencil.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_pencil2.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_pencil_2.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_pencil_3.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_pencil_4.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_plus.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_user.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_user2.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/ic_user3.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/image_bg2.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/imageborder.xml" value="0.164" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/mutedborder.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/mystatusborder.xml" value="0.1725" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/progress_bar_bg.xml" value="0.1725" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/recentstoryborder.xml" value="0.1745" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/round_shape.xml" value="0.1745" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/roundwhitebg.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/selector.xml" value="0.104" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/storyborder.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/drawable/viewedborder.xml" value="0.165" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout-v21/sample_progress_bar.xml" value="0.23125" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout-v23/fragment_chats.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_chat_detail.xml" value="0.25" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_fragments_loader.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_otp_verification.xml" value="0.25" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_own_status.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_phone_verification.xml" value="0.25" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_signup.xml" value="0.25" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_splash.xml" value="0.25" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_status_page.xml" value="0.2" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_status_privacy.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/activity_view_status.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/fragment_calls.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/fragment_chats.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/fragment_status.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/fragment_status.xml" value="0.1827354260089686" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/layout.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/muted_status_user.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/s.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_privacy_user.xml" value="0.23125" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_progress_bar.xml" value="0.17421875" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_receiver.xml" value="0.25" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_seen_user.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_sender.xml" value="0.25" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_show_user.xml" value="0.25" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/sample_status_user.xml" value="0.23125" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/layout/viewed_status_user.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/aryan/AndroidStudioProjects/ConvoZ/app/src/main/res/menu/seenMenu.xml" value="0.23229166666666667" />
       </map>
     </option>
   </component>

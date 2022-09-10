@@ -37,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class OTPVerification extends AppCompatActivity {
@@ -190,9 +192,29 @@ public class OTPVerification extends AppCompatActivity {
                                         binding2.verifyotp.setEnabled(false);
                                         Users users = new Users();
 
+                                        ArrayList<HashMap<String,Object>> status = new ArrayList<>();
+                                        ArrayList<String> muted = new ArrayList<>();
+                                        ArrayList<String> blocked = new ArrayList<>();
+                                        ArrayList<String> hidden = new ArrayList<>();
+
+                                        HashMap<String,Object> s = new HashMap<>();
+                                        s.put("dummy","");
+                                        status.add(s);
+                                        muted.add("");
+                                        blocked.add("");
+                                        hidden.add("");
+
+                                        users.setMuted(muted);
+                                        users.setStatus(status);
+                                        users.setBlocked(blocked);
                                         users.setUserName("");
-                                        users.setProfilepic("https://firebasestorage.googleapis.com/v0/b/convo-z.appspot.com" +
-                                                "/o/ic_user.xml?alt=media&token=21f1893e-535e-4c25-9d39-345370395d88");  //default
+                                        users.setHidden(hidden);
+                                     //   users.setPassword("");
+                                        users.setLastSeen("");
+                                        users.setBio("");
+                                    //    users.setEmail("");
+                                        String profilePic = getResources().getString(R.string.ic_user);
+                                        users.setProfilePic(profilePic);//default
 
                                         users.setPhoneNumber("+91"+mobile);
                                         users.setUserId(id);
@@ -253,7 +275,8 @@ public class OTPVerification extends AppCompatActivity {
                         if (task.isSuccessful()) {
                       //      Log.d(TAG, "linkWithCredential:success");
                             FirebaseUser user = task.getResult().getUser();
-                               database.getReference().child("Users").child(user.getUid()).child("phoneNumber").setValue(mobile);
+                            assert user != null;
+                            database.getReference().child("Users").child(user.getUid()).child("phoneNumber").setValue(mobile);
 
                             SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
                             sp.edit().putInt("lc",1).apply();
@@ -272,8 +295,8 @@ public class OTPVerification extends AppCompatActivity {
                 });
     }
 
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-    }
+ //   @Override
+//    public void onBackPressed() {
+  //      moveTaskToBack(true);
+  //  }
 }

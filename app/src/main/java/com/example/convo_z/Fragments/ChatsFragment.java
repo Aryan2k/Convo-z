@@ -1,6 +1,7 @@
 package com.example.convo_z.Fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -74,7 +75,7 @@ public class ChatsFragment extends Fragment {
                 while (phones.moveToNext() && phones != null && phones.getCount() > 0) {
 
                   //  String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    @SuppressLint("Range") String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                     phoneNumber = phoneNumber.replaceAll("\\s","");
 
@@ -88,23 +89,18 @@ public class ChatsFragment extends Fragment {
                             phoneNumber = "+"+phoneNumber;
                         }
 
-                       // HashMap<String,Object> obj = new HashMap<>();
-                       // obj.put("name",name);
-                      //  obj.put("phoneNumber",phoneNumber);
-
                         contacts.add(phoneNumber);
                     }
                 }
                 phones.close();
-
                 list.clear();
 
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Users user = dataSnapshot.getValue(Users.class);
+                    assert user != null;
                     user.setUserId(dataSnapshot.getKey());
 
                     if (user.getPhoneNumber() != null) {
-
                       //  Log.d("rofll",user.getUserName() + user.getPhoneNumber());
 
                         if(!user.getPhoneNumber().startsWith("+91"))
@@ -114,7 +110,7 @@ public class ChatsFragment extends Fragment {
                                     .child("phoneNumber").setValue(user.getPhoneNumber());
                         }
                         if (!FirebaseAuth.getInstance().getUid().equals(user.getUserId()) && contacts.contains(user.getPhoneNumber())) {
-                            list.add(user);
+                            list.add(user); //changes to the list are made here but they are reflected in recyclerView in the adapter's onBindViewHolderMethod
                         }
                     }
                 }

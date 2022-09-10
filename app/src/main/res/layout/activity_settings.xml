@@ -10,12 +10,11 @@
 
     <ImageView
         android:id="@+id/backArrow"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="45dp"
+        android:layout_height="35dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_arrow"
-        app:tint="#FFFFFF" />
+        android:src="@drawable/ic_home" />
 
     <LinearLayout
         android:id="@+id/l1"
@@ -34,6 +33,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_user"
+            android:background="@drawable/roundwhitebg"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp" />
 
@@ -43,6 +43,7 @@
             android:layout_height="35dp"
             android:layout_marginLeft="35dp"
             android:layout_marginTop="-30dp"
+            android:background="@drawable/imageborder"
             android:src="@drawable/ic_plus"
             app:tintMode="multiply" />
 
@@ -69,9 +70,10 @@
                 android:fontFamily="@font/candal"
                 android:hint="Enter name"
                 android:inputType="textPersonName"
+                android:paddingLeft="5dp"
                 android:textColor="@drawable/utility_colour"
                 android:textColorHint="#e4d7f4"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -91,21 +93,22 @@
                 android:textSize="22sp" />
 
             <EditText
-                android:id="@+id/etstatus"
+                android:id="@+id/etbio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/candal"
                 android:hint="Enter bio"
                 android:inputType="textPersonName"
+                android:paddingLeft="5dp"
                 android:textColor="@drawable/utility_colour"
                 android:textColorHint="#e4d7f4"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
             android:layout_gravity="right"
             android:layout_marginTop="10dp"
             android:background="@drawable/button_bg"
@@ -124,8 +127,8 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/linear_bg"
         android:orientation="vertical"
-        android:paddingVertical="25dp"
-        android:paddingHorizontal="40dp">
+        android:paddingHorizontal="40dp"
+        android:paddingVertical="25dp">
 
         <TextView
             android:id="@+id/textView12"

@@ -4,21 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.convo_z.Login.LoginClass;
 import com.example.convo_z.MainActivity;
 import com.example.convo_z.Model.Users;
@@ -43,17 +35,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.security.Key;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
-public class signupClass extends AppCompatActivity {
+public class SignupClass extends AppCompatActivity {
 
  //   private static final String ALGORITHM = "AES";
    // private static final String KEY = "1Hbfh667adfDEJ78";
@@ -77,7 +62,7 @@ public class signupClass extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
-        progressDialog = new ProgressDialog(signupClass.this);
+        progressDialog = new ProgressDialog(SignupClass.this);
         progressDialog.setTitle("Registering User");
         progressDialog.setMessage("We're signing you up!");
 
@@ -91,7 +76,7 @@ public class signupClass extends AppCompatActivity {
         binding.signupPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(signupClass.this, PhoneVerification.class);
+                Intent i = new Intent(SignupClass.this, PhoneVerification.class);
                 i.putExtra("code","22"); //dummy value to avoid crash
                 startActivity(i);
             }
@@ -100,7 +85,7 @@ public class signupClass extends AppCompatActivity {
         binding.signinn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(signupClass.this, LoginClass.class);
+                Intent i = new Intent(SignupClass.this, LoginClass.class);
                 startActivity(i);
             }
         });
@@ -137,7 +122,28 @@ public class signupClass extends AppCompatActivity {
 
                                    String id = task.getResult().getUser().getUid();
 
+                                   ArrayList<HashMap<String,Object>> status = new ArrayList<>();
+                                   ArrayList<String> muted = new ArrayList<>();
+                                   ArrayList<String> blocked = new ArrayList<>();
+                                   ArrayList<String> hidden = new ArrayList<>();
+
+                                   String profilePic = getResources().getString(R.string.ic_user);
+
+                                   HashMap<String,Object> s = new HashMap<>();
+                                   s.put("dummy","");
+                                   status.add(s);
+                                   muted.add("");
+                                   blocked.add("");
+                                   hidden.add("");
+
+                                   user.setMuted(muted);
+                                   user.setStatus(status);
+                                   user.setBlocked(blocked);
+                                   user.setProfilePic(profilePic);
                                    user.setUserId(id);
+                                   user.setBio("");
+                                   user.setLastSeen("");
+                                   user.setHidden(hidden);
 
                                    database.getReference().child("Users").child(id).setValue(user);
 
@@ -326,7 +332,6 @@ public class signupClass extends AppCompatActivity {
                             return;
                     }
 
-
                 }
 
                          // Toast.makeText(getApplicationContext(), "Please enter all the fields!", Toast.LENGTH_SHORT).show();
@@ -432,13 +437,35 @@ public class signupClass extends AppCompatActivity {
                             database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override                 //to check if the user has already signed up with that google account
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    assert user != null;
                                     if(!snapshot.hasChild(user.getUid())) //if not,add it to db
                                     {
                                         Users users = new Users();
 
+                                        ArrayList<HashMap<String,Object>> status = new ArrayList<>();
+                                        ArrayList<String> muted = new ArrayList<>();
+                                        ArrayList<String> blocked = new ArrayList<>();
+                                        ArrayList<String> hidden = new ArrayList<>();
+
+                                        HashMap<String,Object> s = new HashMap<>();
+                                        s.put("dummy","");
+                                        status.add(s);
+                                        muted.add("");
+                                        blocked.add("");
+                                        hidden.add("");
+
+                                        users.setMuted(muted);
+                                        users.setStatus(status);
+                                        users.setBlocked(blocked);
+                                        users.setEmail(user.getEmail());
+                                        users.setBio("");
+                                        //users.setPassword("");
+                                        users.setLastSeen("");
                                         users.setUserId(user.getUid());
                                         users.setUserName(user.getDisplayName());
-                                        users.setProfilepic(user.getPhotoUrl().toString());
+                                        users.setProfilePic(user.getPhotoUrl().toString());
+                                        users.setHidden(hidden);
+
                                         database.getReference().child("Users").child(user.getUid()).setValue(users);
                                     }
                                 }
@@ -449,6 +476,7 @@ public class signupClass extends AppCompatActivity {
                                 }
                             });
 
+                            assert user != null;
                             checkProfileStatus(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -475,18 +503,18 @@ public class signupClass extends AppCompatActivity {
                     SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
                     sp.edit().putInt("lc",1).apply();
 
-                    Intent i = new Intent(signupClass.this, MainActivity.class);
+                    Intent i = new Intent(SignupClass.this, MainActivity.class);
                     startActivity(i);
                 }
                 else if(!snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) //google signup or email signup
                 {
-                    Intent i = new Intent(signupClass.this, PhoneVerification.class);
+                    Intent i = new Intent(SignupClass.this, PhoneVerification.class);
                     i.putExtra("code","44");  //determines if this is an account linking case or new independent signin/up using phone
                     startActivity(i);
                 }
                 else if (snapshot.child("phoneNumber").exists() && !snapshot.child("userName").exists())  //signup using phone
                 {
-                    Intent i = new Intent(signupClass.this, SettingsActivity.class);
+                    Intent i = new Intent(SignupClass.this, SettingsActivity.class);
                     startActivity(i);
                 }
             }

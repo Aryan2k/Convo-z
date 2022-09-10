@@ -5,4 +5,5 @@
     <string name="url_logincheck">http://192.168.0.5:8080/loginCheck</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ic_user">https://firebasestorage.googleapis.com/v0/b/convo–z.appspot.com/o/ic_user.xml?alt=media&amp;token=f5646db3-bdb5-419c-9911-78f07f673655</string>
 </resources>

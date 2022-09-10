@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.convo_z.Model.Users;
 import com.example.convo_z.databinding.ActivitySettingsBinding;
-import com.example.convo_z.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,14 +26,15 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
-import okhttp3.internal.cache.DiskLruCache;
-
 public class SettingsActivity extends AppCompatActivity {
 
     ActivitySettingsBinding binding;
     FirebaseAuth auth;
+    Uri sFile;
     FirebaseStorage storage;
     FirebaseDatabase database;
+    boolean photoChanged=false;
+    String disableHome="2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,8 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         Intent i = getIntent();
-        final String disableHome = i.getStringExtra("disableHome");
+        if(i.hasExtra("disableHome"))
+           disableHome = i.getStringExtra("disableHome");
 
         if(disableHome.equals("30"))
         {
@@ -61,7 +62,6 @@ public class SettingsActivity extends AppCompatActivity {
         binding.backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i = new Intent(SettingsActivity.this,MainActivity.class);
                 i.putExtra("progressDialog","14");
                 startActivity(i);
@@ -74,13 +74,14 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         Users user = snapshot.getValue(Users.class);
 
+                        assert user != null;
                         Picasso.get()
-                                .load(user.getProfilepic())
+                                .load(user.getProfilePic())
                                 .placeholder(R.drawable.ic_user)
                                 .into(binding.profileImage);
 
                         binding.etusername.setText(user.getUserName());
-                        binding.etstatus.setText(user.getStatus());
+                        binding.etbio.setText(user.getBio());
 
                     }
 
@@ -93,15 +94,15 @@ public class SettingsActivity extends AppCompatActivity {
         binding.save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!binding.etusername.getText().toString().trim().isEmpty() && !binding.etstatus.getText().toString().trim().isEmpty())
+                if(!binding.etusername.getText().toString().trim().isEmpty() && !binding.etbio.getText().toString().trim().isEmpty())
                 {
 
                     String username = binding.etusername.getText().toString().trim();
-                    String status = binding.etstatus.getText().toString().trim();
+                    String bio = binding.etbio.getText().toString().trim();
 
                     HashMap<String,Object> obj = new HashMap<>();
                     obj.put("userName",username);
-                    obj.put("status",status);
+                    obj.put("bio",bio);
 
                     database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
                             .updateChildren(obj).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -119,24 +120,40 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         }
                     });
+
+                  if(photoChanged) {
+                      final StorageReference reference = storage.getReference().child("profile_pictures").child(FirebaseAuth.getInstance().getUid());
+
+                      reference.putFile(sFile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                          @Override
+                          public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                              reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                  @Override
+                                  public void onSuccess(Uri uri) {
+                                      database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                                              .child("profilePic").setValue(uri.toString());
+                                  //    Toast.makeText(getApplicationContext(), "Profile Photo Updated!", Toast.LENGTH_SHORT).show();
+                                  }
+                              });
+                          }
+                      });
+                  }
                 }
                 else
                 {
-                      if(binding.etusername.getText().toString().trim().isEmpty() && !binding.etstatus.getText().toString().trim().isEmpty())
+                      if(binding.etusername.getText().toString().trim().isEmpty() && !binding.etbio.getText().toString().trim().isEmpty())
                       {
                           binding.etusername.setError("Enter username");
-                          return;
                       }
-                      else if(!binding.etusername.getText().toString().trim().isEmpty() && binding.etstatus.getText().toString().trim().isEmpty())
+                      else if(!binding.etusername.getText().toString().trim().isEmpty() && binding.etbio.getText().toString().trim().isEmpty())
                       {
-                        binding.etstatus.setError("Enter status");
-                        return;
+                        binding.etbio.setError("Enter bio");
                       }
                       else
                         {
                           binding.etusername.setError("Enter username");
-                          binding.etstatus.setError("Enter status");
-                          return;
+                          binding.etbio.setError("Enter bio");
                         }
                       //Toast.makeText(getApplicationContext(),"Please enter both the fields!",Toast.LENGTH_SHORT).show();
                 }
@@ -152,38 +169,28 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent,33);
             }
         });
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(data.getData()!=null)
+        if(data!=null && data.getData()!=null)
         {
-            Uri sFile = data.getData();
+            sFile = data.getData();
             binding.profileImage.setImageURI(sFile);
-
-            final StorageReference reference = storage.getReference().child("profile_pictures").child(FirebaseAuth.getInstance().getUid());
-
-            reference.putFile(sFile).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
-                                    .child("profilepic").setValue(uri.toString());
-                             Toast.makeText(getApplicationContext(),"Profile Photo Updated!",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
+            photoChanged=true;
         }
     }
     @Override
     public void onBackPressed() {
+        if(disableHome.equals("10"))
+        {
+            Intent i = new Intent(SettingsActivity.this,MainActivity.class);
+            i.putExtra("progressDialog","14");
+            startActivity(i);
+        }
+        else
         moveTaskToBack(true);
     }
 }

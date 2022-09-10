@@ -2,8 +2,6 @@ package com.example.convo_z.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +47,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         final Users user = list.get(position); //user here is a receiver
-        Picasso.get().load(user.getProfilepic()).placeholder(R.drawable.ic_user).into(holder.imageView);
+        Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(holder.imageView);
         holder.userName.setText(user.getUserName());
 
         FirebaseDatabase.getInstance().getReference().child("Chats")
@@ -88,14 +86,13 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                     }
                 });
 
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent i = new Intent(context, ChatDetailActivity.class);
                 i.putExtra("userId",user.getUserId());
-                i.putExtra("profilePic",user.getProfilepic());
+                i.putExtra("profilePic",user.getProfilePic());
                 i.putExtra("userName",user.getUserName());
                 context.startActivity(i);
             }
@@ -103,7 +100,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     }
 
-    @Override
+   @Override
     public int getItemCount() {
         return list.size();
     }

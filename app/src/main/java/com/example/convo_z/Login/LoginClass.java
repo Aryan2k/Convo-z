@@ -4,30 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.convo_z.MainActivity;
-import com.example.convo_z.Model.MessagesModel;
 import com.example.convo_z.Model.Users;
-import com.example.convo_z.R;
 import com.example.convo_z.SettingsActivity;
-import com.example.convo_z.Signup.signupClass;
+import com.example.convo_z.Signup.SignupClass;
 import com.example.convo_z.Verification.PhoneVerification;
 import com.example.convo_z.databinding.ActivityLoginBinding;
-import com.example.convo_z.databinding.ActivitySignupBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -45,15 +34,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.security.Key;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 
 public class LoginClass extends AppCompatActivity {
 
@@ -228,7 +210,7 @@ public class LoginClass extends AppCompatActivity {
 
     public void signupintent(View v)
     {
-        Intent i = new Intent(LoginClass.this, signupClass.class);
+        Intent i = new Intent(LoginClass.this, SignupClass.class);
         startActivity(i);
     }
 
@@ -293,12 +275,34 @@ public class LoginClass extends AppCompatActivity {
                             database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override                 //to check if the user has already signed up with that google account
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    assert user != null;
                                     if(!snapshot.hasChild(user.getUid())) //if not,add it to db
                                     {
                                          Users users = new Users();
-                                         users.setUserId(user.getUid());
-                                         users.setUserName(user.getDisplayName());
-                                         users.setProfilepic(user.getPhotoUrl().toString());
+
+                                        ArrayList<HashMap<String,Object>> status = new ArrayList<>();
+                                        ArrayList<String> muted = new ArrayList<>();
+                                        ArrayList<String> blocked = new ArrayList<>();
+                                        ArrayList<String> hidden = new ArrayList<>();
+
+                                        HashMap<String,Object> s = new HashMap<>();
+                                        s.put("dummy","");
+                                        status.add(s);
+                                        muted.add("");
+                                        blocked.add("");
+                                        hidden.add("");
+
+                                        users.setMuted(muted);
+                                        users.setStatus(status);
+                                        users.setBlocked(blocked);
+                                        users.setBio("");
+                                        users.setLastSeen("");
+                                        users.setEmail(user.getEmail());
+                                        //users.setPassword("");
+                                        users.setUserId(user.getUid());
+                                        users.setUserName(user.getDisplayName());
+                                        users.setProfilePic(user.getPhotoUrl().toString());
+                                        users.setHidden(hidden);
 
                                         database.getReference().child("Users").child(user.getUid()).setValue(users);
                                         Toast.makeText(getApplicationContext(),"Signed in with google!",Toast.LENGTH_SHORT).show();
@@ -311,6 +315,7 @@ public class LoginClass extends AppCompatActivity {
                                 }
                             });
 
+                            assert user != null;
                             checkProfileStatus(user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -327,7 +332,6 @@ public class LoginClass extends AppCompatActivity {
 
     public void checkProfileStatus(final String userID)
     {
-
         database.getReference().child("Users").child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

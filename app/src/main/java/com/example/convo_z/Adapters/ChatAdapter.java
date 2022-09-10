@@ -81,7 +81,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
                 if(messagesModel.getuId().equals(FirebaseAuth.getInstance().getUid()) && messagesModel.getMessage_status().equals("1")) {
                                                                         //if the selected message was sent by the logged-in user and the message hasn't been deleted yet.
-
                     new AlertDialog.Builder(context)
                             .setTitle("Delete")
                             .setMessage("Are you sure you want to delete this message?")
@@ -185,7 +184,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
                                                 .child(messagesModel.getMessageID())
                                                 .child("message_status")
                                                 .setValue(messagesModel.getMessage_status());
-
                                     }
                                 }).setNegativeButton("Don't Delete", new DialogInterface.OnClickListener() {
                             @Override
@@ -195,7 +193,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
                         }).show();
                 }
                 }
-
 
                 return false;
             }

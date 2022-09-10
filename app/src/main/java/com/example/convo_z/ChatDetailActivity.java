@@ -53,6 +53,7 @@ public class ChatDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ChatDetailActivity.this,MainActivity.class);
+                i.putExtra("progressDialog","14");
                 startActivity(i);
             }
         });
@@ -73,11 +74,11 @@ public class ChatDetailActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                         messagesModels.clear();
                         for(DataSnapshot snapshot1 : snapshot.getChildren())
                         {
                             MessagesModel messagesModel = snapshot1.getValue(MessagesModel.class);
+                            assert messagesModel != null;
                             messagesModel.setMessageID(snapshot1.getKey());
                             messagesModels.add(messagesModel);
                         }
@@ -100,7 +101,6 @@ public class ChatDetailActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), "Type something!", Toast.LENGTH_SHORT).show();
                     binding.editTextTextPersonName.setError("Type something!");
                     binding.editTextTextPersonName.requestFocus();
-                    return;
                 }
                 else {
                     final MessagesModel model = new MessagesModel(senderId, msg);
@@ -131,5 +131,12 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ChatDetailActivity.this,MainActivity.class);
+        i.putExtra("progressDialog","14");
+        startActivity(i);
     }
 }
