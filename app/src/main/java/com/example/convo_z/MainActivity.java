@@ -1,23 +1,14 @@
 package com.example.convo_z;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,16 +16,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.convo_z.Adapters.FragmentsAdapter;
-import com.example.convo_z.Fragments.StatusFragment;
-import com.example.convo_z.Login.LoginClass;
-import com.example.convo_z.Splash.Splashscreen;
-import com.example.convo_z.Status.StatusPage;
-import com.example.convo_z.Verification.OTPVerification;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.example.convo_z.adapters.FragmentsAdapter;
+import com.example.convo_z.authentication.LoginActivity;
 import com.example.convo_z.databinding.ActivityMainBinding;
-import com.google.android.material.tabs.TabLayout;
+import com.example.convo_z.settings.ProfileSettingsActivity;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     ProgressDialog progressDialog;
 
-    Double pager=0.0;
+    Double pager = 0.0;
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,26 +48,25 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getSupportActionBar().setElevation(0);
+        Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(getDrawable(R.color.colorAccent));
+        Objects.requireNonNull(getSupportActionBar()).setElevation(0);
 
         Window window = MainActivity.this.getWindow();
-// clear FLAG_TRANSLUCENT_STATUS flag:
+        // clear FLAG_TRANSLUCENT_STATUS flag:
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-// finally change the color
-        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this,R.color.colorPrimaryVariant));
-
+        // finally change the color
+        window.setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryVariant));
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.drawable.core_colour2));
         //<gradient android:startColor="#333440" android:endColor="#333440"
-
-      //  binding.viewPager.setOffscreenPageLimit(1);
+        //  binding.viewPager.setOffscreenPageLimit(1);
 
         auth = FirebaseAuth.getInstance();
 
         Intent i = getIntent();
-        if(i.hasExtra("pager"))
-        pager = i.getDoubleExtra("pager",0.0);
+        if (i.hasExtra("pager"))
+            pager = i.getDoubleExtra("pager", 0.0);
 
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[]{Manifest.permission.READ_CONTACTS},
@@ -82,21 +77,20 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu Menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu,Menu);
+        inflater.inflate(R.menu.menu, Menu);
         return super.onCreateOptionsMenu(Menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.settings:
 
-                Intent in = new Intent(MainActivity.this,SettingsActivity.class);
-                in.putExtra("disableHome","10");
+                Intent in = new Intent(MainActivity.this, ProfileSettingsActivity.class);
+                in.putExtra("disableHome", "10");
                 startActivity(in);
-
                 break;
 
             case R.id.security:
@@ -106,75 +100,55 @@ public class MainActivity extends AppCompatActivity {
             case R.id.logout:
 
                 auth.signOut();
-
-                SharedPreferences sp = getSharedPreferences("login",MODE_PRIVATE);
-                sp.edit().putInt("lc",0).apply();
-
-                Intent i = new Intent(MainActivity.this, LoginClass.class);
-                startActivity(i);
-
+                SharedPreferences sp = getSharedPreferences("login", MODE_PRIVATE);
+                sp.edit().putInt("lc", 0).apply();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
-
         }
         return true;
     }
 
-   // @Override
-    //public void onBackPressed() {
-    //    moveTaskToBack(true);
-  //  }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted!.
 
-                    // permission was granted!.
+                binding.viewPager.setAdapter((new FragmentsAdapter(getSupportFragmentManager(), getLifecycle())));
 
-                    binding.viewPager.setAdapter((new FragmentsAdapter(getSupportFragmentManager(),getLifecycle())));
+                new TabLayoutMediator(binding.tablayout, binding.viewPager,
+                        (tab, position) -> {
+                            String[] tabTitles = {"CHATS", "STATUS", "CALLS"};
+                            tab.setText(tabTitles[position]);
+                        }).attach();
 
-                    new TabLayoutMediator(binding.tablayout, binding.viewPager,
-                            (tab, position) -> {
-                                String [] tabTitles={"CHATS","STATUS","CALLS"};
-                                tab.setText(tabTitles[position]);
-                            }).attach();
+                if (pager == 1.2)
+                    binding.viewPager.setCurrentItem(1);
 
-                    if(pager==1.2)
-                        binding.viewPager.setCurrentItem(1);
+                Intent i = getIntent();
+                String progressDialogRemover = i.getStringExtra("progressDialog");
 
-                    Intent i = getIntent();
-                    String progressDialogRemover = i.getStringExtra("progressDialog");
+                if (progressDialogRemover == null) {  //better way to prevent crashes than passing dummy values
 
-                    if(progressDialogRemover==null) {  //better way to prevent crashes than passing dummy values
+                    progressDialog = new ProgressDialog(MainActivity.this);
+                    progressDialog.setTitle("Loading");
+                    progressDialog.setMessage("Getting things ready asap!");
 
-                        progressDialog = new ProgressDialog(MainActivity.this);
-                        progressDialog.setTitle("Loading");
-                        progressDialog.setMessage("Getting things ready asap!");
+                    progressDialog.show();
 
-                        progressDialog.show();
+                    Runnable progressRunnable = () -> progressDialog.dismiss();
 
-                        Runnable progressRunnable = new Runnable() {
-
-                            @Override
-                            public void run() {
-                                progressDialog.dismiss();
-                            }
-                        };
-
-                        Handler pdCanceller = new Handler();
-                        pdCanceller.postDelayed(progressRunnable, 2000);
-                    }
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission
-                    Toast.makeText(MainActivity.this, "PERMISSION DENIED: Cannot Open Contacts", Toast.LENGTH_SHORT).show();
+                    Handler pdCanceller = new Handler();
+                    pdCanceller.postDelayed(progressRunnable, 2000);
                 }
+
+            } else {
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission
+                Toast.makeText(MainActivity.this, "PERMISSION DENIED: Cannot Open Contacts", Toast.LENGTH_SHORT).show();
             }
             // other 'case' lines to check for other
             // permissions this app might request
@@ -183,12 +157,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(binding.viewPager.getCurrentItem()!=0)
-          binding.viewPager.setCurrentItem(0);
-        else{
-             finishAffinity();
-             super.onBackPressed();
-            }
+        if (binding.viewPager.getCurrentItem() != 0)
+            binding.viewPager.setCurrentItem(0);
+        else {
+            finishAffinity();
+            super.onBackPressed();
+        }
     }
 
 }

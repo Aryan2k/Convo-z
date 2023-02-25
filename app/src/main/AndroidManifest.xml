@@ -15,26 +15,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:allowBackup">
-        <activity android:name=".Status.OwnStatus" />
-        <activity android:name=".Status.StatusPrivacy" />
+        tools:replace="android:allowBackup"
+        tools:targetApi="s"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        tools:ignore="DataExtractionRules">
+        <activity android:name=".status.OwnStatus" />
+        <activity android:name=".status.StatusPrivacy" />
         <activity
-            android:name=".Status.ViewStatus"
+            android:name=".status.ViewStatus"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".Signup.SignupClass" />
-        <activity android:name=".Login.LoginClass" />
-        <activity android:name=".ChatDetailActivity" />
-        <activity android:name=".Verification.PhoneVerification" />
-        <activity android:name=".Verification.OTPVerification" />
-        <activity android:name=".Status.StatusPage" />
+        <activity android:name=".settings.ProfileSettingsActivity" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+        <activity android:name=".authentication.SignupActivity" />
+        <activity android:name=".authentication.LoginActivity" />
+        <activity android:name=".chat.ChatDetailActivity" />
+        <activity android:name=".verification.PhoneVerification" />
+        <activity android:name=".verification.OTPVerification" />
+        <activity android:name=".status.StatusPage" />
         <activity
-            android:name=".Splash.Splashscreen"
+            android:name=".splash.Splashscreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -11,14 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="7dp"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="7dp"
+        android:layout_marginHorizontal="7dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/bg_sender"
         android:maxWidth="310dp"
         android:maxHeight="400dp"
-        android:minHeight="30dp">
+        android:minHeight="30dp"
+        android:layout_alignParentEnd="true">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -33,30 +33,34 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
+            android:fontFamily="@font/poppins"
             android:layout_marginBottom="3dp"
             android:inputType="textLongMessage|textMultiLine"
             android:maxWidth="270dp"
             android:minWidth="50dp"
-            android:text="Text"
-            android:textColor="#090808"
+            tools:text="Text"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/textView7"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            tools:ignore="TextViewEdits" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginHorizontal="5dp"
+            android:fontFamily="@font/poppins"
             android:layout_marginBottom="2dp"
-            android:text="1:00 PM"
+            tools:text="1:00 PM"
             android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="SmallSp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -9,5 +9,9 @@
         <item>@font/artifika</item>
         <item>@font/autour_one</item>
         <item>@font/candal</item>
+        <item>@font/poppins</item>
+        <item>@font/poppins_bold</item>
+        <item>@font/poppins_medium</item>
+        <item>@font/poppins_semibold</item>
     </array>
 </resources>

@@ -1,32 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginBottom="2dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:layout_marginTop="2dp"
-    android:layout_marginLeft="6dp"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginStart="6dp">
+    android:layout_marginVertical="2dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="70dp"
-        android:layout_height="73dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="5dp"
+        android:layout_height="70dp"
+        android:layout_marginHorizontal="6dp"
+        android:paddingVertical="5dp"
         android:src="@drawable/ic_user"
-        app:civ_border_color="#ffffff"
-        app:civ_border_width="2dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="5dp" />
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="9dp"
         android:layout_marginTop="1dp"
         android:orientation="vertical">
@@ -34,29 +28,24 @@
         <TextView
             android:id="@+id/userNameList"
             android:layout_width="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_height="37dp"
-            android:fontFamily="@font/amethysta"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_medium"
             android:gravity="center|left"
             android:paddingLeft="3dp"
-            android:paddingTop="5dp"
             android:text="Default"
-            android:textColor="#000000"
-            android:textSize="15.5sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+            android:textSize="15.5sp" />
 
         <TextView
             android:id="@+id/lastMessage"
             android:layout_width="match_parent"
-            android:layout_height="29dp"
-            android:layout_marginBottom="2dp"
-            android:fontFamily="@font/amethysta"
-            android:paddingLeft="5dp"
-            android:paddingBottom="2dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:paddingLeft="6dp"
             android:text="Last Message"
-            android:translationY="-2dp"
-            android:textColor="#666666"
-            android:textSize="13.2sp"
+            android:textColor="@color/status_time"
+            android:textSize="12sp"
             tools:text="Last Message" />
     </LinearLayout>
 

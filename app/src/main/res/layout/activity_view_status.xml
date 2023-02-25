@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Status.ViewStatus">
+    tools:context=".status.ViewStatus">
 
     <ImageView
         android:id="@+id/imageView9"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/status"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:fillViewport="true">
 
         <RelativeLayout
             android:id="@+id/rl"
@@ -32,28 +32,31 @@
                 android:elevation="10dp"
                 android:orientation="horizontal"
                 android:paddingBottom="12dp"
-                android:translationY="0dp">
+                android:translationY="0dp"
+                tools:ignore="UnusedAttribute,UselessParent">
 
                 <EditText
                     android:id="@+id/editTextTextPersonName"
                     android:layout_width="0dp"
                     android:layout_height="45dp"
                     android:layout_marginStart="5dp"
+                    android:fontFamily="@font/poppins"
                     android:layout_marginLeft="7dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginRight="2dp"
                     android:layout_marginBottom="4dp"
                     android:layout_weight="1"
+                    android:autofillHints=""
                     android:background="@drawable/bg_edittext_tp"
                     android:ems="10"
                     android:gravity="center_horizontal|top"
-                    android:hint="Reply"
+                    android:hint="@string/reply"
                     android:imeOptions="flagNoFullscreen"
                     android:inputType="textPersonName"
                     android:padding="10dp"
                     android:paddingBottom="4dp"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/white"
                     android:textColorHint="#d9d9d9"
                     android:textSize="15sp"
                     android:translationY="-5dp" />
@@ -62,12 +65,10 @@
                     android:id="@+id/imageView6"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginHorizontal="3dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
+                    android:contentDescription="@string/send"
                     android:paddingStart="3dp"
                     android:paddingLeft="3dp"
                     android:paddingTop="10dp"
@@ -94,11 +95,11 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="580dp"
         android:defaultFocusHighlightEnabled="true"
-        android:fontFamily="@font/amethysta"
+        android:fontFamily="@font/poppins"
         android:gravity="center_horizontal"
         android:paddingTop="14dp"
         android:text="TextView"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
         android:textSize="16.5sp"
         android:translationY="-20dp" />
 
@@ -125,9 +126,8 @@
             android:id="@+id/imageView10"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:onClick="back"
             android:layout_marginTop="15dp"
-            android:tint="#ffffff"
+            android:tint="@color/white"
             android:translationX="20dp"
             app:srcCompat="@drawable/ic_arrow" />
 
@@ -145,7 +145,7 @@
             android:src="@drawable/ic_user"
             android:translationX="35dp"
             android:translationY="0dp"
-            app:civ_border_color="#ffffff"
+            app:civ_border_color="@color/white"
             app:civ_border_width="2dp" />
 
 
@@ -162,12 +162,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:layout_marginTop="7dp"
-                android:fontFamily="@font/amethysta"
+                android:fontFamily="@font/poppins"
                 android:gravity="center|left"
                 android:paddingLeft="3dp"
                 android:paddingTop="7dp"
                 android:text="Name"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -176,12 +176,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_marginBottom="8dp"
-                android:fontFamily="@font/amethysta"
+                android:fontFamily="@font/poppins"
                 android:paddingLeft="5dp"
-                android:translationY="-2dp"
                 android:paddingBottom="2dp"
                 android:textColor="#ffffff"
                 android:textSize="11.5sp"
+                android:translationY="-2dp"
                 tools:text="Time" />
         </LinearLayout>
 

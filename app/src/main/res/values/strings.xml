@@ -6,4 +6,31 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ic_user">https://firebasestorage.googleapis.com/v0/b/convo–z.appspot.com/o/ic_user.xml?alt=media&amp;token=f5646db3-bdb5-419c-9911-78f07f673655</string>
+    <string name="this_user_cant_see_your_status_updates">This user can\'t see your status updates.</string>
+    <string name="this_user_can_see_your_status_updates">This user can see your status updates.</string>
+    <string name="no_views_yet">No views yet.</string>
+    <string name="this_status_update_is_unavailable">This status update is unavailable.</string>
+    <string name="muted_updates">Muted updates</string>
+    <string name="no_muted_updates">No muted updates</string>
+    <string name="my_status">My status</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="verify_otp">Verify OTP!</string>
+    <string name="enter_the_one_time_password">Enter the One-Time Password</string>
+    <string name="phone_number_verification">Phone Number Verification</string>
+    <string name="_10_digit_phone_number">10-Digit Phone Number</string>
+    <string name="verify">Verify!</string>
+    <string name="reply">Reply</string>
+    <string name="app_logo">app_logo</string>
+    <string name="joined_us_before">Joined us before?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="phone">Phone</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="no_recent_updates">No recent updates</string>
+    <string name="new_updates">New updates</string>
+    <string name="no_viewed_updates">No viewed updates</string>
+    <string name="viewed_updates">Viewed updates</string>
+    <string name="coming_soon">Coming Soon!</string>
+    <string name="addStatus">addStatus</string>
+    <string name="status">status</string>
+    <string name="send">send</string>
 </resources>

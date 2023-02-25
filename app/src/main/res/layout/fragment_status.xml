@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linear2"
+    android:id="@+id/scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+    android:focusable="true"
     android:tag="Status"
-    tools:context=".Fragments.StatusFragment"
-    android:orientation="vertical"
-    android:focusable="true">
-
-    <ScrollView
-        android:id="@+id/scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    tools:context=".fragments.StatusFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -26,31 +20,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:paddingBottom="10dp"
-            android:clickable="true"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:focusable="true">
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="95dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:clickable="false"
                 android:focusable="true">
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:clickable="false"
+                    android:focusable="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:paddingVertical="5dp"
                     android:src="@drawable/ic_user"
-                    app:civ_border_color="#FF000000"
+                    app:civ_border_color="@color/black"
                     app:civ_border_width="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:focusable="true" />
+                    android:layout_marginLeft="10dp" />
 
                 <ImageView
                     android:id="@+id/plus"
@@ -58,13 +55,14 @@
                     android:layout_height="22dp"
                     android:layout_marginStart="56dp"
                     android:layout_marginLeft="56dp"
-                    android:background="@drawable/imageborder"
+                    android:background="@drawable/image_border"
                     android:clickable="false"
                     android:cropToPadding="true"
                     android:padding="1dp"
-
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_plus"
+                    android:translationY="-6dp"
+                    android:translationX="-6dp"
                     app:layout_constraintBottom_toBottomOf="@+id/profileImage"
                     app:layout_constraintStart_toStartOf="@+id/profileImage"
                     app:layout_constraintTop_toTopOf="parent"
@@ -74,37 +72,35 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:clickable="false"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/userNameList"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:fontFamily="@font/amethysta"
-                    android:gravity="center|left"
-                    android:paddingLeft="2dp"
-                    android:paddingTop="12dp"
-                    android:layout_marginTop="2dp"
-                    android:text="My status"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingLeft="1dp"
                     android:clickable="false"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center|left"
+                    android:text="My status"
+                    android:textColor="@color/black"
+                    android:textSize="14.5sp" />
 
                 <TextView
                     android:id="@+id/lastMessage"
                     android:layout_width="match_parent"
-                    android:layout_height="29dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
                     android:clickable="false"
-                    android:backgroundTint="#ffffff"
-                    android:textSize="13dp"
-                    android:fontFamily="@font/amethysta"
+                    android:fontFamily="@font/poppins"
                     android:paddingLeft="4dp"
                     android:text="Tap to add status update"
-                    android:textColor="#404040" />
+                    android:textColor="@color/status_time"
+                    android:textSize="12.5dp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -120,10 +116,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ll1"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="9dp"
-                android:fontFamily="@font/amethysta"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins"
                 android:text="Recent updates"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recentStatusRecyclerView"
@@ -131,7 +127,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/recent"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <TextView
                 android:id="@+id/seen"
@@ -141,37 +138,36 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="12.5dp"
                 android:layout_marginBottom="7dp"
-                android:fontFamily="@font/amethysta"
+                android:fontFamily="@font/poppins"
                 android:paddingTop="2dp"
                 android:text="Viewed updates"
-                android:textStyle="bold"> </TextView>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/viewedStatusRecyclerView"
-                android:layout_width="406dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/seen"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <TextView
                 android:id="@+id/muted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/viewedStatusRecyclerView"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="7dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="7dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_down_24"
                 android:drawablePadding="5.2dp"
                 android:focusable="true"
-                android:fontFamily="@font/amethysta"
+                android:fontFamily="@font/poppins"
+                android:paddingVertical="5dp"
                 android:paddingLeft="5dp"
-                android:paddingTop="5dp"
                 android:paddingRight="20dp"
-                android:paddingBottom="5dp"
                 android:text="Muted updates"
                 android:textStyle="bold">
 
@@ -183,11 +179,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/muted"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="1dp" />
+                android:layout_marginTop="1dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </RelativeLayout>
     </LinearLayout>
 
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>

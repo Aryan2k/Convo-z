@@ -4,88 +4,73 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#84E032"
-    tools:context=".Verification.PhoneVerification">
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="241dp"
-        android:background="#84E032"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="285dp"
-            android:layout_height="180dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/screenshot_1700" />
-
-    </RelativeLayout>
+    android:background="@color/themeColor"
+    tools:context=".verification.PhoneVerification">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="82dp"
-        android:layout_below="@id/relativeLayout"
-        android:layout_marginTop="-7dp"
-        android:background="#84E032" />
+        android:id="@+id/appLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginVertical="16dp"
+        android:background="@drawable/screenshot_1700"
+        android:contentDescription="@string/app_logo" />
 
     <RelativeLayout
         android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_below="@id/imageView"
-        android:layout_marginTop="-26dp"
-        android:background="@drawable/core_colour"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appLogo"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/general_bg"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@id/textView"
-            android:layout_width="391dp"
-            android:layout_height="92dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="68dp"
-            android:gravity="center|center_horizontal|center_vertical"
-            android:text="Phone Number Verification"
+            android:id="@+id/phoneVerification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginVertical="16dp"
+            android:gravity="center"
+            android:text="@string/phone_number_verification"
             android:textColor="@drawable/utility_colour"
-            android:textSize="20sp"
-            app:fontFamily="@font/candal" />
+            android:textSize="24sp"
+            app:fontFamily="@font/poppins_bold" />
 
         <EditText
             android:id="@+id/editTextMobile"
-            android:layout_width="383dp"
-            android:layout_height="43dp"
-            android:layout_alignBottom="@+id/textView"
-            android:layout_marginBottom="-52dp"
-            android:background="#e8f4f8"
-            android:ems="10"
-            android:fontFamily="@font/candal"
-            android:hint="10-Digit Phone Number"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/phoneVerification"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="24dp"
+            android:autofillHints=""
+            android:background="@drawable/white_button"
+            android:fontFamily="@font/poppins"
+            android:hint="@string/_10_digit_phone_number"
             android:includeFontPadding="false"
             android:inputType="number"
-            android:paddingLeft="5dp"
-            android:textColorHint="	#989898" />
-
-
+            android:paddingHorizontal="8dp"
+            android:textColorHint="@color/hint"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <Button
-        android:id="@+id/verifyphone"
-        android:layout_width="159dp"
-        android:layout_height="39dp"
-        android:layout_alignBottom="@+id/container"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="119dp"
-        android:layout_marginRight="119dp"
-        android:layout_marginBottom="-74dp"
-
-        android:background="@drawable/general_button"
-        android:fontFamily="serif"
-        android:gravity="center|center_horizontal|center_vertical"
-        android:text="Verify!"
+        android:id="@+id/verifyPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@id/container"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/white_button"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="center"
+        android:paddingHorizontal="16dp"
+        android:text="@string/verify"
         android:textAlignment="center"
-        android:textColor="@drawable/utility_colour"
-        android:textSize="20sp"
-        app:layout_constraintVertical_bias="0.333" />
+        android:textAllCaps="false"
+        android:textColor="@drawable/core_colour"
+        android:textSize="20sp" />
 </RelativeLayout>

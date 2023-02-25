@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.CallsFragment">
+    tools:context=".fragments.CallsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/amethysta"
-        android:textColor="@drawable/core_colour"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:text="Coming Soon!"
+        android:fontFamily="@font/poppins_bold"
+        android:text="@string/coming_soon"
+        android:textColor="@drawable/core_colour"
         android:textSize="20sp" />
 
 </FrameLayout>
