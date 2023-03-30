@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.convo_z.model.Users;
+import com.example.convo_z.model.User;
 import com.example.convo_z.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -24,13 +24,13 @@ import java.util.Objects;
 
 public class StatusPrivacyAdapter extends RecyclerView.Adapter<StatusPrivacyAdapter.ViewHolder> {
 
-    ArrayList<Users> list;
+    ArrayList<User> list;
     Context context;
-    Users loggedInUser;
+    User loggedInUser;
     FirebaseDatabase database;
     ArrayList<String> hidden;
 
-    public StatusPrivacyAdapter(ArrayList<Users> list, Context context, ArrayList<String> hidden) {
+    public StatusPrivacyAdapter(ArrayList<User> list, Context context, ArrayList<String> hidden) {
         this.list = list;
         this.context = context;
         this.hidden = hidden;
@@ -46,13 +46,13 @@ public class StatusPrivacyAdapter extends RecyclerView.Adapter<StatusPrivacyAdap
     @Override
     public void onBindViewHolder(@NonNull StatusPrivacyAdapter.ViewHolder holder, int position) {
 
-        final Users user = list.get(position);
+        final User user = list.get(position);
         database = FirebaseDatabase.getInstance();
 
         database.getReference().child("Users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                loggedInUser = snapshot.getValue(Users.class);
+                loggedInUser = snapshot.getValue(User.class);
             }
 
             @Override

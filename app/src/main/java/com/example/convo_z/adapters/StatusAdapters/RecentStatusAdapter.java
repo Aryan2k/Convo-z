@@ -1,6 +1,5 @@
 package com.example.convo_z.adapters.StatusAdapters;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.convo_z.model.Users;
 import com.example.convo_z.R;
-import com.example.convo_z.status.ViewStatus;
+import com.example.convo_z.model.User;
+import com.example.convo_z.viewmodel.ui.status.ViewStatusPage;
+import com.example.convo_z.utils.FunctionUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,25 +26,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
 
 public class RecentStatusAdapter extends RecyclerView.Adapter<RecentStatusAdapter.ViewHolder> {
 
-    ArrayList<Users> list;
+    ArrayList<User> list;
     Context context;
-    Users loggedInUser;
+    User loggedInUser;
     FirebaseDatabase database;
-    String result = "";
 
-    public RecentStatusAdapter(ArrayList<Users> list, Context context) {
+    public RecentStatusAdapter(ArrayList<User> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -56,17 +49,18 @@ public class RecentStatusAdapter extends RecyclerView.Adapter<RecentStatusAdapte
         return new ViewHolder(view);
     }
 
+    @SuppressWarnings("unchecked")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecentStatusAdapter.ViewHolder holder, int position) {
 
-        final Users user = list.get(position);
+        final User user = list.get(position);
         database = FirebaseDatabase.getInstance();
 
         database.getReference().child("Users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                loggedInUser = snapshot.getValue(Users.class);
+                loggedInUser = snapshot.getValue(User.class);
             }
 
             @Override
@@ -83,63 +77,13 @@ public class RecentStatusAdapter extends RecyclerView.Adapter<RecentStatusAdapte
                 ArrayList<String> seen = (ArrayList<String>) hm.get("seen");
 
                 assert seen != null;
-                if (!seen.contains(FirebaseAuth.getInstance().getUid()))      //display the first unseen status
+                if (!seen.contains(FirebaseAuth.getInstance().getUid()))      //display the first unseen status coz at least one status update is unseen
                 {
                     String link = String.valueOf(hm.get("link"));
                     String time = String.valueOf(hm.get("time"));
-
-                    @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
-                    Date sdate = new Date(Long.parseLong(time));
-                    Date eDate = new Date(new Date().getTime());
-
-                    String startTime = simpleDateFormat.format(sdate);
-                    String endTime = simpleDateFormat.format(eDate);
-
-                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH);
-
-                    LocalTime start = LocalTime.parse(startTime, timeFormatter);
-                    LocalTime end = LocalTime.parse(endTime, timeFormatter);
-                    Duration diff = Duration.between(start, end);
-
-                    long hours = Math.abs(diff.toHours());
-                    long minutes = Math.abs(diff.minusHours(hours).toMinutes());
-                    //          @SuppressLint("DefaultLocale") String totalTimeString = String.format("%02d:%02d", hours, minutes);
-
-                    if (hours < 1) {
-                        if (minutes == 0)
-                            result += "Just Now";
-                        else if (minutes == 1)
-                            result += "A minute ago";
-                        else
-                            result += minutes + " minutes ago";
-                    } else {
-                        String minute;
-                        String hour;
-
-                        int min = start.getMinute();
-                        if (min < 10) {
-                            minute = "0" + min;
-                        } else {
-                            minute = String.valueOf(min);
-                        }
-
-                        int hr = start.getHour();
-                        if (hr < 10) {
-                            hour = "0" + hr;
-                        } else {
-                            hour = String.valueOf(hr);
-                        }
-
-                        if (start.isAfter(end))
-                            result += "Yesterday, " + hour + ":" + minute;
-                        else
-                            result += "Today, " + hour + ":" + minute;
-                    }
-
                     Picasso.get().load(link).placeholder(R.drawable.ic_user).into(holder.imageView);
                     holder.userName.setText(user.getUserName());
-                    holder.time.setText(result);
-
+                    holder.time.setText(FunctionUtils.timeSetter(time));
                     break;
                 }
             }
@@ -150,12 +94,10 @@ public class RecentStatusAdapter extends RecyclerView.Adapter<RecentStatusAdapte
             String message = "New status updates from " + user.getUserName() + " won't appear under recent updates anymore.";
             new AlertDialog.Builder(context)
                     .setTitle("Mute " + user.getUserName() + "'s status updates?")
-                    //    .setMessage(message)
                     .setMessage(Html.fromHtml("<font color='#808080'>" + message + "</font>"))
                     .setPositiveButton("Yes", (dialog, which) -> {
-                        //updated in db
+                        //update in db
                         dialog.dismiss();
-
                         ArrayList<String> muted = loggedInUser.getMuted();
                         muted.add(user.getUserId());
                         loggedInUser.setMuted(muted);
@@ -165,7 +107,7 @@ public class RecentStatusAdapter extends RecyclerView.Adapter<RecentStatusAdapte
         });
 
         holder.itemView.setOnClickListener(view -> {
-            Intent i = new Intent(context, ViewStatus.class);
+            Intent i = new Intent(context, ViewStatusPage.class);
             i.putExtra("user", user);
             context.startActivity(i);
         });
@@ -183,11 +125,9 @@ public class RecentStatusAdapter extends RecyclerView.Adapter<RecentStatusAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.profileImage);
             userName = itemView.findViewById(R.id.userName);
             time = itemView.findViewById(R.id.time);
-
         }
     }
 }

@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.convo_z.chat.ChatDetailActivity;
-import com.example.convo_z.model.Users;
+import com.example.convo_z.viewmodel.ui.chat.ChatActivity;
+import com.example.convo_z.model.User;
 import com.example.convo_z.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,10 +26,10 @@ import java.util.Objects;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
-    ArrayList<Users> list;
+    ArrayList<User> list;
     Context context;
 
-    public UsersAdapter(ArrayList<Users> list, Context context) {
+    public UsersAdapter(ArrayList<User> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -45,7 +45,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        final Users user = list.get(position); //user here is a receiver
+        final User user = list.get(position); //user here is a receiver
         Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(holder.imageView);
         holder.userName.setText(user.getUserName());
 
@@ -81,8 +81,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                 });
 
         holder.itemView.setOnClickListener(v -> {
-
-            Intent i = new Intent(context, ChatDetailActivity.class);
+            Intent i = new Intent(context, ChatActivity.class);
             i.putExtra("userId", user.getUserId());
             i.putExtra("profilePic", user.getProfilePic());
             i.putExtra("userName", user.getUserName());

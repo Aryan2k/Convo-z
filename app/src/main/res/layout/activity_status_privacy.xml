@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".status.StatusPrivacy">
+    tools:context=".viewmodel.ui.status.StatusPrivacyPage">
 
     <TextView
         android:id="@+id/su"
@@ -15,16 +15,16 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:background="@drawable/core_colour"
-        android:fontFamily="@font/amethysta"
+        android:fontFamily="@font/poppins_bold"
         android:gravity="center_horizontal|center_vertical"
         android:text="Status privacy"
         android:textColor="#ffffff"
         android:textSize="22sp" />
 
     <ImageView
-        android:id="@+id/imageView10"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:id="@+id/homeImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:translationX="20dp"
         android:translationY="6dp"
@@ -35,6 +35,7 @@
         android:id="@+id/hiddenRecyclerView"
         android:layout_width="match_parent"
         android:clickable="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_height="662dp"
         android:layout_below="@id/su"
         android:layout_alignParentBottom="true"

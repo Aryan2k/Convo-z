@@ -33,4 +33,6 @@
     <string name="addStatus">addStatus</string>
     <string name="status">status</string>
     <string name="send">send</string>
+    <string name="request_id_token">938774708033-8pbshs2bhd4vokqqa2ob48mqsos077e4.apps.googleusercontent.co</string>
+    <string name="unmute">\"Unmute \"</string>
 </resources>

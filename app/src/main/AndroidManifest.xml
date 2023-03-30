@@ -8,40 +8,42 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="false"
+        android:name=".utils.BaseApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        tools:ignore="DataExtractionRules"
         tools:replace="android:allowBackup"
-        tools:targetApi="s"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        tools:ignore="DataExtractionRules">
-        <activity android:name=".status.OwnStatus" />
-        <activity android:name=".status.StatusPrivacy" />
+        tools:targetApi="s">
+
+        <activity android:name=".viewmodel.ui.status.OwnStatusPage" />
+        <activity android:name=".viewmodel.ui.status.StatusPrivacyPage" />
         <activity
-            android:name=".status.ViewStatus"
+            android:name=".viewmodel.ui.status.ViewStatusPage"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity android:name=".settings.ProfileSettingsActivity" />
-        <activity android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
-        <activity android:name=".authentication.SignupActivity" />
-        <activity android:name=".authentication.LoginActivity" />
-        <activity android:name=".chat.ChatDetailActivity" />
-        <activity android:name=".verification.PhoneVerification" />
-        <activity android:name=".verification.OTPVerification" />
-        <activity android:name=".status.StatusPage" />
+        <activity android:name=".viewmodel.ui.settings.ProfileSettingsActivity" />
         <activity
-            android:name=".splash.Splashscreen"
+            android:name=".viewmodel.ui.home.HomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity android:name=".viewmodel.ui.authentication.SignupActivity" />
+        <activity android:name=".viewmodel.ui.authentication.LoginActivity" />
+        <activity android:name=".viewmodel.ui.chat.ChatActivity" />
+        <activity android:name=".viewmodel.ui.verification.PhoneVerificationPage" />
+        <activity android:name=".viewmodel.ui.verification.OTPVerificationPage" />
+        <activity android:name=".viewmodel.ui.status.AddStatusPage" />
+        <activity
+            android:name=".viewmodel.ui.splash.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

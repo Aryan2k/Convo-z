@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:tag="Status"
-    tools:context=".fragments.StatusFragment">
+    tools:context=".viewmodel.ui.home.fragments.StatusFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,8 +51,8 @@
 
                 <ImageView
                     android:id="@+id/plus"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginStart="56dp"
                     android:layout_marginLeft="56dp"
                     android:background="@drawable/image_border"
@@ -61,8 +61,8 @@
                     android:padding="1dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_plus"
-                    android:translationY="-6dp"
-                    android:translationX="-6dp"
+                    android:translationY="-8dp"
+                    android:translationX="-8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/profileImage"
                     app:layout_constraintStart_toStartOf="@+id/profileImage"
                     app:layout_constraintTop_toTopOf="parent"
@@ -91,7 +91,7 @@
                     android:textSize="14.5sp" />
 
                 <TextView
-                    android:id="@+id/lastMessage"
+                    android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"

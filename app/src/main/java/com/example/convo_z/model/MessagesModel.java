@@ -2,7 +2,7 @@ package com.example.convo_z.model;
 
 public class MessagesModel {
 
-    String uId,message;
+    String uId, message;
     Long Timestamp;
     String messageID;         //message id of the message for sender
     String messageID_receiver; //message id of the same message for receiver to facilitate deletion for all
@@ -46,7 +46,8 @@ public class MessagesModel {
         this.message = message;
     }
 
-    public MessagesModel(){}
+    public MessagesModel() {
+    }
 
     public String getUid() {
         return uId;
