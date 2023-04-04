@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/themeColor"
-    tools:context=".viewmodel.ui.verification.PhoneVerificationPage">
+    tools:context=".ui.verification.PhoneVerificationPage">
 
     <ImageView
         android:id="@+id/appLogo"
@@ -39,7 +39,7 @@
             app:fontFamily="@font/poppins_bold" />
 
         <EditText
-            android:id="@+id/editTextMobile"
+            android:id="@+id/editTextPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_below="@id/phoneVerification"
@@ -53,7 +53,8 @@
             android:inputType="number"
             android:paddingHorizontal="8dp"
             android:textColorHint="@color/hint"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="TextFields" />
     </RelativeLayout>
 
     <Button

@@ -1,25 +1,31 @@
-package com.example.convo_z.viewmodel.ui.settings;
+package com.example.convo_z.ui.settings;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.convo_z.R;
+import com.example.convo_z.databinding.ActivityProfileSettingsBinding;
 import com.example.convo_z.model.User;
 import com.example.convo_z.repository.SettingsRepository;
-import com.example.convo_z.viewmodel.ui.home.HomeActivity;
+import com.example.convo_z.ui.home.HomeActivity;
+import com.example.convo_z.utils.Constants;
 import com.example.convo_z.utils.Data;
+import com.example.convo_z.utils.FunctionUtils;
 import com.example.convo_z.utils.Resource;
 import com.example.convo_z.viewmodel.settings.ProfileSettingsActivityViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -30,8 +36,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
     ActivityProfileSettingsBinding binding;
     private ProfileSettingsActivityViewModel viewModel;
     boolean photoChanged = false;
-    String disableHome = "2";
-    Uri sFile;
+    Serializable disableHome;
+    Uri photoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +49,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
         new SettingsRepository();  // to initialize various instances
 
-        if (getIntent().hasExtra("disableHome"))
-            disableHome = getIntent().getStringExtra("disableHome");
+        if (getIntent().hasExtra(getString(R.string.disable_home_button)))
+            disableHome = getIntent().getSerializableExtra(getString(R.string.disable_home_button));
 
-        assert disableHome != null;
-        if (disableHome.equals("30")) {
+        if (disableHome != null && disableHome.equals(Constants.CASE_DISABLE_HOME)) {
             binding.backArrow.setVisibility(View.INVISIBLE);
             binding.backArrow.setEnabled(false);
         }
@@ -59,14 +64,25 @@ public class ProfileSettingsActivity extends AppCompatActivity {
         loadCurrentUser();
     }
 
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK
+                        && result.getData() != null) {
+                    photoUri = result.getData().getData();
+                    binding.profileImage.setImageURI(photoUri);
+                    photoChanged = true;
+                }
+            }
+    );
+
     private void setUpClickListeners() {
-        binding.backArrow.setOnClickListener(v -> startActivity(new Intent(ProfileSettingsActivity.this, HomeActivity.class).putExtra("progressDialog", "14")));
+        binding.backArrow.setOnClickListener(v -> startActivity(new Intent(ProfileSettingsActivity.this, HomeActivity.class)));
+
         binding.plus.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-            startActivityForResult(intent, 33);
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            activityResultLauncher.launch(intent);
         });
+
         binding.save.setOnClickListener(v -> {
             if (!binding.etUsername.getText().toString().trim().isEmpty() && !binding.etBio.getText().toString().trim().isEmpty()) {
 
@@ -74,39 +90,28 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 String bio = binding.etBio.getText().toString().trim();
 
                 HashMap<String, Object> details = new HashMap<>();
-                details.put("userName", username);
-                details.put("bio", bio);
+                details.put(getString(R.string.user_name), username);
+                details.put(getString(R.string.bio), bio);
 
                 if (photoChanged) {
-                    viewModel.updateCurrentUserProfilePhoto(sFile);
+                    viewModel.updateCurrentUserProfilePhoto(photoUri, this);
                 }
-                viewModel.updateCurrentUserTextFields(details);
-
+                viewModel.updateCurrentUserTextFields(details, this);
             } else {
                 if (binding.etUsername.getText().toString().trim().isEmpty() && !binding.etBio.getText().toString().trim().isEmpty()) {
-                    binding.etUsername.setError("Enter username");
+                    binding.etUsername.setError(getString(R.string.enter_username));
                 } else if (!binding.etUsername.getText().toString().trim().isEmpty() && binding.etBio.getText().toString().trim().isEmpty()) {
-                    binding.etBio.setError("Enter bio");
+                    binding.etBio.setError(getString(R.string.enter_bio));
                 } else {
-                    binding.etUsername.setError("Enter username");
-                    binding.etBio.setError("Enter bio");
+                    binding.etUsername.setError(getString(R.string.enter_username));
+                    binding.etBio.setError(getString(R.string.enter_bio));
                 }
             }
         });
     }
 
     private void loadCurrentUser() {
-        viewModel.loadCurrentUser();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && data.getData() != null) {
-            sFile = data.getData();
-            binding.profileImage.setImageURI(sFile);
-            photoChanged = true;
-        }
+        viewModel.loadCurrentUser(this);
     }
 
     private void handleLoadCurrentUserLiveData() {
@@ -134,7 +139,7 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 case LOADING:
                     break;
                 case SUCCESS:
-                    Toast.makeText(getApplicationContext(), "Profile Photo Updated!", Toast.LENGTH_SHORT).show();
+                    FunctionUtils.getSnackBar(getString(R.string.profile_photo_updated), binding.getRoot()).show();
                     break;
                 case EXCEPTION:
                     //  Toast.makeText(getApplicationContext(), resource.getMessage(), Toast.LENGTH_SHORT).show();
@@ -150,10 +155,10 @@ public class ProfileSettingsActivity extends AppCompatActivity {
                 case LOADING:
                     break;
                 case SUCCESS:
-                    Toast.makeText(getApplicationContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                    if (disableHome.equals("30")) {
-                        SharedPreferences sp = getSharedPreferences("login", MODE_PRIVATE);
-                        sp.edit().putInt("lc", 1).apply();
+                    FunctionUtils.getSnackBar(getString(R.string.profile_updated_successfully), binding.getRoot()).show();
+                    if (disableHome.equals(Constants.CASE_DISABLE_HOME)) {
+                        SharedPreferences sp = getSharedPreferences(getString(R.string.login), MODE_PRIVATE);
+                        sp.edit().putInt(getString(R.string.login_check), 1).apply();
                         startActivity(new Intent(ProfileSettingsActivity.this, HomeActivity.class));
                     }
                     break;
@@ -167,8 +172,8 @@ public class ProfileSettingsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (disableHome.equals("10")) {
-            startActivity(new Intent(ProfileSettingsActivity.this, HomeActivity.class).putExtra("progressDialog", "14"));
+        if (disableHome.equals(Constants.CASE_DO_NOT_DISABLE_HOME)) {
+            startActivity(new Intent(ProfileSettingsActivity.this, HomeActivity.class));
         } else
             moveTaskToBack(true);
     }

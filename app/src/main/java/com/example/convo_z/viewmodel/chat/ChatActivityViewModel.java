@@ -1,5 +1,7 @@
 package com.example.convo_z.viewmodel.chat;
 
+import android.content.Context;
+
 import androidx.lifecycle.ViewModel;
 
 import com.example.convo_z.adapters.ChatsAdapter;
@@ -21,11 +23,11 @@ public class ChatActivityViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public void loadChat(String senderRoom, ArrayList<MessagesModel> messagesList, ChatsAdapter adapter) {
-        repository.loadChat(senderRoom, messagesList, adapter);
+    public void loadChat(String senderRoom, ArrayList<MessagesModel> messagesList, ChatsAdapter adapter, Context context) {
+        repository.loadChat(senderRoom, messagesList, adapter, context);
     }
 
-    public void sendMessage(MessagesModel model, String receiverRoom, String senderRoom) {
-        repository.sendMessage(model, receiverRoom, senderRoom);
+    public void sendMessage(MessagesModel model, String receiverRoom, String senderRoom, Context context) {
+        repository.sendMessage(model, receiverRoom, senderRoom, context);
     }
 }

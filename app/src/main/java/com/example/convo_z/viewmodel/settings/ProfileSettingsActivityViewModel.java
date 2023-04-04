@@ -1,5 +1,6 @@
 package com.example.convo_z.viewmodel.settings;
 
+import android.content.Context;
 import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
@@ -27,19 +28,19 @@ public class ProfileSettingsActivityViewModel extends ViewModel {
 
     public MutableLiveData<Resource<Data<User>>> LoadCurrentUserLiveData = new MutableLiveData<>();
 
-    public void loadCurrentUser() {
-        repository.loadCurrentUser(LoadCurrentUserLiveData);
+    public void loadCurrentUser(Context context) {
+        repository.loadCurrentUser(context, LoadCurrentUserLiveData);
     }
 
     public MutableLiveData<Resource<Data<User>>> UpdateCurrentUserTextFieldsLiveData = new MutableLiveData<>();
 
-    public void updateCurrentUserTextFields(HashMap<String, Object> details) {
-        repository.updateCurrentUserTextFields(details, UpdateCurrentUserTextFieldsLiveData);
+    public void updateCurrentUserTextFields(HashMap<String, Object> details, Context context) {
+        repository.updateCurrentUserTextFields(details, context, UpdateCurrentUserTextFieldsLiveData);
     }
 
     public MutableLiveData<Resource<Data<User>>> UpdateCurrentUserProfilePhotoLiveData = new MutableLiveData<>();
 
-    public void updateCurrentUserProfilePhoto(Uri sFile) {
-        repository.updateCurrentUserProfilePhoto(sFile, UpdateCurrentUserProfilePhotoLiveData);
+    public void updateCurrentUserProfilePhoto(Uri sFile, Context context) {
+        repository.updateCurrentUserProfilePhoto(sFile, context, UpdateCurrentUserProfilePhotoLiveData);
     }
 }

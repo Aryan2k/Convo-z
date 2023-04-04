@@ -11,9 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.convo_z.viewmodel.ui.chat.ChatActivity;
-import com.example.convo_z.model.User;
 import com.example.convo_z.R;
+import com.example.convo_z.model.User;
+import com.example.convo_z.ui.chat.ChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,37 +41,33 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         return new ViewHolder(view);
     }
 
-    //automatically updates the recyclerview when new entries are made specified by position
+    // automatically updates the recyclerview when new entries are made specified by position
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
-        final User user = list.get(position); //user here is a receiver
+        final User user = list.get(position); // user here is a receiver
         Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(holder.imageView);
         holder.userName.setText(user.getUserName());
 
-        FirebaseDatabase.getInstance().getReference().child("Chats")
+        FirebaseDatabase.getInstance().getReference().child(context.getResources().getString(R.string.chats))
                 .child(FirebaseAuth.getInstance().getUid() + user.getUserId())
-                .orderByChild("timestamp")
+                .orderByChild(context.getResources().getString(R.string.timestamp))
                 .limitToLast(1)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                         if (snapshot.hasChildren()) {
                             for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                                holder.lastMessage.setText(Objects.requireNonNull(snapshot1.child("message").getValue()).toString());
-
+                                holder.lastMessage.setText(Objects.requireNonNull(snapshot1.child(context.getResources().getString(R.string.message)).getValue()).toString());
                                /* Here the dataSnapshot has only one child so the loop runs only once always. OnBindViewHolder is
                                 called for all the items in the list so it updates the last messages of all the items,one in each call.
                                  It does not update last messages of all the items in one loop,rather it updates the last message of only the item specified
                                 by position in one for loop. DataSnapshot can only be referenced using a loop that's why we are using
                                 a loop or else a loop wouldn't be needed.
                                 Items in the list refers to receivers,i.e. last message of conversation between the logged in user and the
-                                receiver specified by position which is stored in Users 'user'. {final Users user = list.get(position);}*/
-
+                                receiver specified by position which is stored in Users 'user'. {final Users user = list.get(position);} */
                             }
                         }
-
                     }
 
                     @Override
@@ -80,14 +76,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                     }
                 });
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent i = new Intent(context, ChatActivity.class);
-            i.putExtra("userId", user.getUserId());
-            i.putExtra("profilePic", user.getProfilePic());
-            i.putExtra("userName", user.getUserName());
-            context.startActivity(i);
-        });
-
+        holder.itemView.setOnClickListener(v -> context.startActivity(new Intent(context, ChatActivity.class)
+                .putExtra(context.getResources().getString(R.string.user_id), user.getUserId())
+                .putExtra(context.getResources().getString(R.string.profile_pic), user.getProfilePic())
+                .putExtra(context.getResources().getString(R.string.user_name), user.getUserName())));
     }
 
     @Override
@@ -102,11 +94,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.profile_image);
             userName = itemView.findViewById(R.id.userNameList);
             lastMessage = itemView.findViewById(R.id.lastMessage);
-
         }
     }
 

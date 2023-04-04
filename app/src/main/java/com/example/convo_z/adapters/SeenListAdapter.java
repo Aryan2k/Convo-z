@@ -40,7 +40,7 @@ public class SeenListAdapter extends RecyclerView.Adapter<SeenListAdapter.ViewHo
 
         final User user = list.get(position);
 
-        String msg = "Seen by: ";
+        String msg = context.getResources().getString(R.string.seen_by);
         Typeface typeface = ResourcesCompat.getFont(context, R.font.poppins);
         holder.userName.setTextSize(15);
         holder.userName.setTypeface(typeface);
@@ -58,7 +58,7 @@ public class SeenListAdapter extends RecyclerView.Adapter<SeenListAdapter.ViewHo
         } else {
             Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(holder.imageView);
             holder.userName.setText(user.getUserName());
-            holder.current.setText("");
+            holder.current.setText(context.getResources().getString(R.string.empty_string));
         }
     }
 
@@ -74,11 +74,9 @@ public class SeenListAdapter extends RecyclerView.Adapter<SeenListAdapter.ViewHo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.profileImage);
             userName = itemView.findViewById(R.id.userName);
-            current = itemView.findViewById(R.id.current);  //no significance as of now
-
+            current = itemView.findViewById(R.id.current);  // no significance as of now
         }
     }
 }

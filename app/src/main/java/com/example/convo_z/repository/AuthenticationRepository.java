@@ -3,7 +3,6 @@ package com.example.convo_z.repository;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
@@ -67,11 +66,11 @@ public class AuthenticationRepository {
                         ArrayList<String> hidden = new ArrayList<>();
 
                         HashMap<String, Object> s = new HashMap<>();
-                        s.put("dummy", "");
+                        s.put(context.getResources().getString(R.string.dummy), context.getResources().getString(R.string.empty_string));
                         status.add(s);
-                        muted.add("");
-                        blocked.add("");
-                        hidden.add("");
+                        muted.add(context.getResources().getString(R.string.empty_string));
+                        blocked.add(context.getResources().getString(R.string.empty_string));
+                        hidden.add(context.getResources().getString(R.string.empty_string));
 
                         newUser.setMuted(muted);
                         newUser.setStatus(status);
@@ -79,10 +78,10 @@ public class AuthenticationRepository {
                         newUser.setHidden(hidden);
                         newUser.setProfilePic(profilePic);
                         newUser.setUserId(id);
-                        newUser.setBio("");
-                        newUser.setLastSeen("");
+                        newUser.setBio(context.getResources().getString(R.string.empty_string));
+                        newUser.setLastSeen(context.getResources().getString(R.string.empty_string));
 
-                        database.getReference().child("Users").child(id).setValue(newUser);
+                        database.getReference().child(context.getResources().getString(R.string.users)).child(id).setValue(newUser);
 
                         EmailAndPasswordSignUpLiveData.setValue(resource.success(new Data<>()));
                     } else {
@@ -92,19 +91,19 @@ public class AuthenticationRepository {
     }
 
     public void checkProfileStatus(final String userId, Context context, MutableLiveData<Constants> ProfileStatusLiveData) {
-        database.getReference().child("Users").child(userId).addValueEventListener(new ValueEventListener() {
+        database.getReference().child(context.getResources().getString(R.string.users)).child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if (snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) {  // profile already updated
-                    SharedPreferences sp = context.getSharedPreferences("login", Context.MODE_PRIVATE);
-                    sp.edit().putInt("lc", 1).apply();
+                if (snapshot.child(context.getResources().getString(R.string.phone_number)).exists() && snapshot.child(context.getResources().getString(R.string.user_name)).exists()) {  // profile already updated
+                    SharedPreferences sp = context.getSharedPreferences(context.getResources().getString(R.string.login), Context.MODE_PRIVATE);
+                    sp.edit().putInt(context.getResources().getString(R.string.login_check), 1).apply();
                     ProfileStatusLiveData.setValue(Constants.CASE_PROFILE_UP_TO_DATE);
 
-                } else if (!snapshot.child("phoneNumber").exists() && snapshot.child("userName").exists()) {  // google signup or email signup
+                } else if (!snapshot.child(context.getResources().getString(R.string.phone_number)).exists() && snapshot.child(context.getResources().getString(R.string.user_name)).exists()) {  // google signup or email signup
                     ProfileStatusLiveData.setValue(Constants.CASE_GOOGLE_OR_EMAIL_SIGNUP);
 
-                } else if (snapshot.child("phoneNumber").exists() && !snapshot.child("userName").exists()) {  // signup using phone
+                } else if (snapshot.child(context.getResources().getString(R.string.phone_number)).exists() && !snapshot.child(context.getResources().getString(R.string.user_name)).exists()) {  // signup using phone
                     ProfileStatusLiveData.setValue(Constants.CASE_PHONE_SIGNUP);
                 }
             }
@@ -132,9 +131,9 @@ public class AuthenticationRepository {
                     activityResultLauncher.launch(intentSenderRequest);
                 })
                 .addOnFailureListener((Activity) context, e -> {
-                    // No saved credentials found. Launch the One Tap sign-up flow, or
-                    // do nothing and continue presenting the signed-out UI.
-                    Log.d("aryan", Objects.requireNonNull(e.getLocalizedMessage()));
+                    //  No saved credentials found. Launch the One Tap sign-up flow, or
+                    //  do nothing and continue presenting the signed-out UI.
+                    //   Log.d("aryan", Objects.requireNonNull(e.getLocalizedMessage()));
                 });
     }
 }

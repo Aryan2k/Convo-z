@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.convo_z.R;
 import com.example.convo_z.model.User;
-import com.example.convo_z.viewmodel.ui.status.ViewStatusPage;
+import com.example.convo_z.ui.status.ViewStatusPage;
 import com.example.convo_z.utils.FunctionUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -60,7 +60,7 @@ public class MutedStatusAdapter extends RecyclerView.Adapter<MutedStatusAdapter.
         user = list.get(position);
         database = FirebaseDatabase.getInstance();
 
-        database.getReference().child("Users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.getReference().child(context.getResources().getString(R.string.users)).child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 loggedInUser = snapshot.getValue(User.class);
@@ -79,7 +79,7 @@ public class MutedStatusAdapter extends RecyclerView.Adapter<MutedStatusAdapter.
         for (int i = 1; i < s.size(); i++) {
             HashMap<String, Object> hm = s.get(i);
             if (hm != null) {
-                ArrayList<String> seen = (ArrayList<String>) hm.get("seen");
+                ArrayList<String> seen = (ArrayList<String>) hm.get(context.getResources().getString(R.string.seen));
                 assert seen != null;
                 if (!seen.contains(FirebaseAuth.getInstance().getUid())) {        // display the first unseen status
                     display(hm);
@@ -96,31 +96,28 @@ public class MutedStatusAdapter extends RecyclerView.Adapter<MutedStatusAdapter.
 
             String message = "New status updates from " + user.getUserName() + " will appear under recent updates.";
             new AlertDialog.Builder(context)
-                    .setTitle(context.getString(R.string.unmute) + user.getUserName() + "'s status updates?")
+                    .setTitle(context.getString(R.string.unmute) + " " + user.getUserName() + "'s status updates?")
                     .setMessage(Html.fromHtml("<font color='#808080'>" + message + "</font>"))
-                    .setPositiveButton("Yes", (dialog, which) -> {
+                    .setPositiveButton(context.getResources().getString(R.string.yes), (dialog, which) -> {
                         // update in db
                         dialog.dismiss();
 
                         ArrayList<String> muted = loggedInUser.getMuted();
                         muted.remove(user.getUserId());
                         loggedInUser.setMuted(muted);
-                        database.getReference().child("Users").child(loggedInUser.getUserId()).setValue(loggedInUser);
+                        database.getReference().child(context.getResources().getString(R.string.users)).child(loggedInUser.getUserId()).setValue(loggedInUser);
 
-                    }).setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss()).show();
+                    }).setNegativeButton(context.getResources().getString(R.string.cancel), (dialog, which) -> dialog.dismiss()).show();
             return true;
         });
 
-        holder.itemView.setOnClickListener(view -> {
-            Intent i = new Intent(context, ViewStatusPage.class);
-            i.putExtra("user", user);
-            context.startActivity(i);
-        });
+        holder.itemView.setOnClickListener(view -> context.startActivity(new Intent(context, ViewStatusPage.class)
+                .putExtra(context.getResources().getString(R.string.user), user)));
     }
 
     private void display(HashMap<String, Object> hm) {
-        String link = String.valueOf(hm.get("link"));
-        String time = String.valueOf(hm.get("time"));
+        String link = String.valueOf(hm.get(context.getResources().getString(R.string.link)));
+        String time = String.valueOf(hm.get(context.getResources().getString(R.string.time)));
 
         Picasso.get().load(link).placeholder(R.drawable.ic_user).into(holder.imageView);
         holder.userName.setText(user.getUserName());

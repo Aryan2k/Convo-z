@@ -1,5 +1,7 @@
 package com.example.convo_z.viewmodel.status;
 
+import android.content.Context;
+
 import androidx.lifecycle.ViewModel;
 
 import com.example.convo_z.repository.StatusRepository;
@@ -20,7 +22,7 @@ public class ViewStatusViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public void updateSeenList(String userId, ArrayList<HashMap<String, Object>> statusList) {
-        repository.updateSeenList(userId, statusList);
+    public void updateSeenList(String userId, ArrayList<HashMap<String, Object>> statusList, Context context) {
+        repository.updateSeenList(userId, statusList, context);
     }
 }

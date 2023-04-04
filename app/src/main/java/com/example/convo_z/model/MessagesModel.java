@@ -1,5 +1,6 @@
 package com.example.convo_z.model;
 
+@SuppressWarnings("unused")
 public class MessagesModel {
 
     String uId, message;

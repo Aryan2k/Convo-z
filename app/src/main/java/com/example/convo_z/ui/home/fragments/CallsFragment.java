@@ -1,4 +1,4 @@
-package com.example.convo_z.viewmodel.ui.home.fragments;
+package com.example.convo_z.ui.home.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

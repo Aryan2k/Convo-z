@@ -29,8 +29,8 @@ public class StatusPrivacyViewModel extends ViewModel {
 
     public MutableLiveData<Resource<Data<User>>> LoadCurrentUserLiveData = new MutableLiveData<>();
 
-    public void loadCurrentUser(String uId) {
-        repository.loadCurrentUser(uId, LoadCurrentUserLiveData);
+    public void loadCurrentUser(String uId, Context context) {
+        repository.loadCurrentUser(uId, context, LoadCurrentUserLiveData);
     }
 
     public void loadAllUsers(ArrayList<User> userList, ArrayList<String> hidden, StatusPrivacyAdapter adapter, Context context) {

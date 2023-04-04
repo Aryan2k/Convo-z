@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".viewmodel.ui.status.StatusPrivacyPage">
+    tools:context=".ui.status.StatusPrivacyPage">
 
     <TextView
         android:id="@+id/su"
@@ -17,7 +17,7 @@
         android:background="@drawable/core_colour"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center_horizontal|center_vertical"
-        android:text="Status privacy"
+        android:text="@string/status_privacy"
         android:textColor="#ffffff"
         android:textSize="22sp" />
 
@@ -29,7 +29,8 @@
         android:translationX="20dp"
         android:translationY="6dp"
         app:srcCompat="@drawable/ic_arrow"
-        app:tint="#ffffff" />
+        app:tint="#ffffff"
+        android:contentDescription="backButton" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hiddenRecyclerView"

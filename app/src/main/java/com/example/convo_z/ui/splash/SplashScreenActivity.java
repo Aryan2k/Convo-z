@@ -1,4 +1,4 @@
-package com.example.convo_z.viewmodel.ui.splash;
+package com.example.convo_z.ui.splash;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.convo_z.R;
-import com.example.convo_z.viewmodel.ui.authentication.LoginActivity;
-import com.example.convo_z.viewmodel.ui.home.HomeActivity;
+import com.example.convo_z.ui.authentication.LoginActivity;
+import com.example.convo_z.ui.home.HomeActivity;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -46,15 +46,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
 
-            SharedPreferences sp = getSharedPreferences("login", MODE_PRIVATE);
-            int loginCheck = sp.getInt("lc", 0);
+            SharedPreferences sp = getSharedPreferences(getString(R.string.login), MODE_PRIVATE);
+            int loginCheck = sp.getInt(getString(R.string.login_check), 0);
 
             if (loginCheck == 1) {
-                Intent i = new Intent(SplashScreenActivity.this, HomeActivity.class);
-                startActivity(i);
+                startActivity(new Intent(SplashScreenActivity.this, HomeActivity.class));
             } else {
-                Intent j = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                startActivity(j);
+                startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
             }
             finish();
 

@@ -1,23 +1,24 @@
-package com.example.convo_z.viewmodel.ui.authentication;
+package com.example.convo_z.ui.authentication;
+
+import static com.example.convo_z.utils.Constants.CASE_ACCOUNT_LINKING;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.convo_z.R;
+import com.example.convo_z.databinding.ActivitySignupBinding;
 import com.example.convo_z.model.User;
-import com.example.convo_z.viewmodel.ui.home.HomeActivity;
-import com.example.convo_z.viewmodel.ui.settings.ProfileSettingsActivity;
-import com.example.convo_z.viewmodel.ui.verification.PhoneVerificationPage;
+import com.example.convo_z.ui.home.HomeActivity;
+import com.example.convo_z.ui.settings.ProfileSettingsActivity;
+import com.example.convo_z.ui.verification.PhoneVerificationPage;
 import com.example.convo_z.utils.Constants;
 import com.example.convo_z.utils.Data;
 import com.example.convo_z.utils.FunctionUtils;
@@ -62,27 +63,15 @@ public class SignupActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         oneTapClient = Identity.getSignInClient(this);
-        setUpProgressDialog();
+        progressDialog = FunctionUtils.getProgressDialog(getString(R.string.registering_user), getString(R.string.we_are_signing_you_up), this);
         setUpClickListeners();
         handleEmailAndPasswordSignUpLiveData();
         handleProfileStatusLiveData();
     }
 
-    private void setUpProgressDialog() {
-        progressDialog = new ProgressDialog(SignupActivity.this);
-        progressDialog.setTitle("Registering user");
-        progressDialog.setMessage("We're signing you up!");
-        //  progressDialog.setProgressStyle(android.R.attr.progressBarStyleSmall);
-        Objects.requireNonNull(progressDialog.getWindow()).
-                setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_progress_dialog));
-    }
-
     private void setUpClickListeners() {
-        binding.signupPhone.setOnClickListener(v -> {
-            Intent i = new Intent(SignupActivity.this, PhoneVerificationPage.class);
-            i.putExtra("code", "22"); //dummy value to avoid crash
-            startActivity(i);
-        });
+        binding.signupPhone.setOnClickListener(v -> startActivity(new Intent(SignupActivity.this, PhoneVerificationPage.class)
+                .putExtra(getString(R.string.login_status), Constants.CASE_SIGN_IN_OR_SIGN_UP)));
         binding.google.setOnClickListener(v -> googleSignIn());
         binding.signinTxt.setOnClickListener(view -> startActivity(new Intent(SignupActivity.this, LoginActivity.class)));
         binding.signupBtn.setOnClickListener(v -> {
@@ -94,7 +83,7 @@ public class SignupActivity extends AppCompatActivity {
                     viewModel.signUpWithEmailAndPassword(binding.email.getText().toString().trim(), binding.password.getText().toString().trim(),
                             binding.fullName.getText().toString().trim(), this);
                 } else {
-                    binding.rePassword.setError("The Passwords don't match!");
+                    binding.rePassword.setError(getString(R.string.the_passwords_dont_match));
                     binding.rePassword.requestFocus();
                     progressDialog.dismiss();
                 }
@@ -112,156 +101,126 @@ public class SignupActivity extends AppCompatActivity {
         switch (result) { // 1111 not poss here
 
             case "1110":
-                binding.rePassword.setError("Enter your password again");
-
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "1101":
-                binding.password.setError("Enter your password");
-
+                binding.password.setError(getString(R.string.enter_your_password));
                 binding.password.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "1100":
-                binding.password.setError("Enter your password");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.password.setError(getString(R.string.enter_your_password));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.password.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "1011":
-                binding.email.setError("Enter your email");
-
+                binding.email.setError(getString(R.string.enter_your_email));
                 binding.email.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "1010":
-                binding.email.setError("Enter your email");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.email.setError(getString(R.string.enter_your_email));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.email.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "1001":
-                binding.email.setError("Enter your email");
-                binding.password.setError("Enter your password");
-
+                binding.email.setError(getString(R.string.enter_your_email));
+                binding.password.setError(getString(R.string.enter_your_password));
                 binding.email.requestFocus();
                 binding.password.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "1000":
-                binding.email.setError("Enter your email");
-                binding.password.setError("Enter your password");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.email.setError(getString(R.string.enter_your_email));
+                binding.password.setError(getString(R.string.enter_your_password));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.email.requestFocus();
                 binding.password.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0111":
-                binding.fullName.setError("Enter your full name");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
                 binding.fullName.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0110":
-                binding.fullName.setError("Enter your full name");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.fullName.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0101":
-                binding.fullName.setError("Enter your full name");
-                binding.password.setError("Enter your password");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.password.setError(getString(R.string.enter_your_password));
                 binding.fullName.requestFocus();
                 binding.password.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0100":
-                binding.fullName.setError("Enter your full name");
-                binding.password.setError("Enter your password");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.password.setError(getString(R.string.enter_your_password));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.fullName.requestFocus();
                 binding.password.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0011":
-                binding.fullName.setError("Enter your full name");
-                binding.email.setError("Enter your email");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.email.setError(getString(R.string.enter_your_email));
                 binding.fullName.requestFocus();
                 binding.email.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0010":
-                binding.fullName.setError("Enter your full name");
-                binding.email.setError("Enter your email");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.email.setError(getString(R.string.enter_your_email));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.fullName.requestFocus();
                 binding.email.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             case "0001":
-                binding.fullName.setError("Enter your full name");
-                binding.email.setError("Enter your email");
-                binding.password.setError("Enter your password");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.email.setError(getString(R.string.enter_your_email));
+                binding.password.setError(getString(R.string.enter_your_password));
                 binding.fullName.requestFocus();
                 binding.email.requestFocus();
                 binding.password.requestFocus();
-
                 progressDialog.dismiss();
                 return;
 
             default: //0000
-                binding.fullName.setError("Enter your full name");
-                binding.email.setError("Enter your email");
-                binding.password.setError("Enter your password");
-                binding.rePassword.setError("Enter your password again");
-
+                binding.fullName.setError(getString(R.string.enter_your_full_name));
+                binding.email.setError(getString(R.string.enter_your_email));
+                binding.password.setError(getString(R.string.enter_your_password));
+                binding.rePassword.setError(getString(R.string.enter_your_password_again));
                 binding.fullName.requestFocus();
                 binding.email.requestFocus();
                 binding.password.requestFocus();
                 binding.rePassword.requestFocus();
-
                 progressDialog.dismiss();
         }
     }
@@ -278,7 +237,7 @@ public class SignupActivity extends AppCompatActivity {
                                 .addOnCompleteListener(this, task -> {
                                     if (task.isSuccessful()) {
                                         final FirebaseUser user = auth.getCurrentUser();
-                                        database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        database.getReference().child(getString(R.string.users)).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override                 // to check if the user has already signed up with that google account
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 assert user != null;
@@ -292,25 +251,25 @@ public class SignupActivity extends AppCompatActivity {
                                                     ArrayList<String> hidden = new ArrayList<>();
 
                                                     HashMap<String, Object> s = new HashMap<>();
-                                                    s.put("dummy", "");
+                                                    s.put(getString(R.string.dummy), getString(R.string.empty_string));
                                                     status.add(s);
-                                                    muted.add("");
-                                                    blocked.add("");
-                                                    hidden.add("");
+                                                    muted.add(getString(R.string.empty_string));
+                                                    blocked.add(getString(R.string.empty_string));
+                                                    hidden.add(getString(R.string.empty_string));
 
                                                     newUser.setMuted(muted);
                                                     newUser.setStatus(status);
                                                     newUser.setBlocked(blocked);
                                                     newUser.setHidden(hidden);
-                                                    newUser.setBio("");
-                                                    newUser.setLastSeen("");
+                                                    newUser.setBio(getString(R.string.empty_string));
+                                                    newUser.setLastSeen(getString(R.string.empty_string));
                                                     newUser.setEmail(user.getEmail());
-                                                    //users.setPassword("");
+                                                    // users.setPassword("");
                                                     newUser.setUserId(user.getUid());
                                                     newUser.setUserName(user.getDisplayName());
                                                     newUser.setProfilePic(Objects.requireNonNull(user.getPhotoUrl()).toString());
 
-                                                    database.getReference().child("Users").child(user.getUid()).setValue(newUser);
+                                                    database.getReference().child(getString(R.string.users)).child(user.getUid()).setValue(newUser);
                                                 }
                                             }
 
@@ -322,7 +281,7 @@ public class SignupActivity extends AppCompatActivity {
                                         viewModel.checkProfileStatus(Objects.requireNonNull(auth.getCurrentUser()).getUid(), getApplicationContext());
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_SHORT).show();
+                                        FunctionUtils.getSnackBar(Objects.requireNonNull(task.getException()).toString(), binding.getRoot()).show();
                                     }
                                 });
                     }
@@ -341,13 +300,12 @@ public class SignupActivity extends AppCompatActivity {
             progressDialog.dismiss();
             switch (profileStatus) {
                 case CASE_PROFILE_UP_TO_DATE:
-                    Toast.makeText(getApplicationContext(), "Sign in successful!", Toast.LENGTH_SHORT).show();
+                    FunctionUtils.getSnackBar(getString(R.string.sign_in_successful), binding.getRoot()).show();
                     startActivity(new Intent(SignupActivity.this, HomeActivity.class));
                     break;
                 case CASE_GOOGLE_OR_EMAIL_SIGNUP:   //  Phone Number Verification Pending
-                    Intent i = new Intent(SignupActivity.this, PhoneVerificationPage.class);
-                    i.putExtra("code", "44");  // determines if this is an account linking case or new a independent signin/up using phone
-                    startActivity(i);
+                    startActivity(new Intent(SignupActivity.this, PhoneVerificationPage.class)
+                            .putExtra(getString(R.string.login_status), CASE_ACCOUNT_LINKING));  // determines if this is an account linking case or new a independent signin/up using phone
                     break;
                 case CASE_PHONE_SIGNUP:   //  User Details Submission Pending
                     startActivity(new Intent(SignupActivity.this, ProfileSettingsActivity.class));
@@ -367,7 +325,7 @@ public class SignupActivity extends AppCompatActivity {
                     viewModel.checkProfileStatus(auth.getUid(), getApplicationContext());
                     break;
                 case EXCEPTION:
-                    Toast.makeText(getApplicationContext(), resource.getMessage(), Toast.LENGTH_SHORT).show();
+                    FunctionUtils.getSnackBar(resource.getMessage(), binding.getRoot()).show();
                     progressDialog.dismiss();
                     break;
             }

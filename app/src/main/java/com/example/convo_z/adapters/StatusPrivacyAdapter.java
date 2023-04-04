@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.convo_z.model.User;
 import com.example.convo_z.R;
+import com.example.convo_z.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +49,7 @@ public class StatusPrivacyAdapter extends RecyclerView.Adapter<StatusPrivacyAdap
         final User user = list.get(position);
         database = FirebaseDatabase.getInstance();
 
-        database.getReference().child("Users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addListenerForSingleValueEvent(new ValueEventListener() {
+        database.getReference().child(context.getResources().getString(R.string.users)).child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 loggedInUser = snapshot.getValue(User.class);
@@ -59,8 +59,6 @@ public class StatusPrivacyAdapter extends RecyclerView.Adapter<StatusPrivacyAdap
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
-        //hidden = loggedInUser.getHidden();   crashes because db load into loggedInUser hasn't finished yet
 
         Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(holder.imageView);
         holder.userName.setText(user.getUserName());
@@ -77,14 +75,14 @@ public class StatusPrivacyAdapter extends RecyclerView.Adapter<StatusPrivacyAdap
             if (!hidden.contains(user.getUserId())) {
                 hidden.add(user.getUserId());
 
-                database.getReference().child("Users").child(loggedInUser.getUserId()).child("hidden").setValue(hidden);
+                database.getReference().child(context.getResources().getString(R.string.users)).child(loggedInUser.getUserId()).child(context.getResources().getString(R.string.hidden)).setValue(hidden);
 
                 holder.current.setText(R.string.this_user_cant_see_your_status_updates);
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.green));
             } else {
                 hidden.remove(user.getUserId());
 
-                database.getReference().child("Users").child(loggedInUser.getUserId()).child("hidden").setValue(hidden);
+                database.getReference().child(context.getResources().getString(R.string.users)).child(loggedInUser.getUserId()).child(context.getResources().getString(R.string.hidden)).setValue(hidden);
 
                 holder.current.setText(R.string.this_user_can_see_your_status_updates);
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.red));
@@ -104,7 +102,6 @@ public class StatusPrivacyAdapter extends RecyclerView.Adapter<StatusPrivacyAdap
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.profileImage);
             userName = itemView.findViewById(R.id.userName);
             current = itemView.findViewById(R.id.current);

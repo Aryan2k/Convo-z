@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:tag="Status"
-    tools:context=".viewmodel.ui.home.fragments.StatusFragment">
+    tools:context=".ui.home.fragments.StatusFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

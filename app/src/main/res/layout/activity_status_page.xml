@@ -20,20 +20,21 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/cameraIcon"
                 android:layout_width="156dp"
                 android:layout_height="28dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/addStatus"
                 android:onClick="onCameraClick"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView7"
-                app:layout_constraintStart_toEndOf="@+id/imageView8"
+                app:layout_constraintEnd_toStartOf="@+id/eyeIcon"
+                app:layout_constraintStart_toEndOf="@+id/pencilIcon"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_camera_3" />
+                app:srcCompat="@drawable/ic_camera_3"
+                tools:ignore="UsingOnClickInXml" />
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/eyeIcon"
                 android:layout_width="96dp"
                 android:layout_height="33dp"
                 android:layout_gravity="right"
@@ -50,13 +51,13 @@
                 app:srcCompat="@drawable/ic_eye" />
 
             <ImageView
-                android:id="@+id/imageView8"
+                android:id="@+id/pencilIcon"
                 android:layout_width="80dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:foregroundGravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView7"
+                app:layout_constraintEnd_toStartOf="@+id/eyeIcon"
                 app:layout_constraintHorizontal_bias="0.07"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -80,7 +81,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_above="@id/l1"
-                android:background="@drawable/white_button"
                 android:layout_below="@+id/camera"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="50dp"
@@ -95,19 +95,17 @@
 
             <ImageView
                 android:id="@+id/camera"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 android:layout_marginHorizontal="16dp"
-                android:paddingVertical="40dp"
                 android:layout_marginVertical="32dp"
                 android:onClick="onCameraClick"
+                android:paddingVertical="40dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/linear"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/statusUpdate"
-                app:layout_constraintVertical_bias="0.471"
                 app:srcCompat="@drawable/ic_camera" />
 
             <LinearLayout
@@ -115,8 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
                 android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <EditText

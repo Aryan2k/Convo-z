@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:id="@+id/linearMain"
     android:layout_height="match_parent"
-    tools:context=".viewmodel.ui.home.HomeActivity"
+    tools:context=".ui.home.HomeActivity"
     android:background="#f4e9f9"
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout"
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@drawable/core_colour"
@@ -20,7 +20,8 @@
         app:tabMaxWidth="0dp"
         app:tabTextColor="#eef8ff"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="#eef8ff" />
+        app:tabSelectedTextColor="#eef8ff"
+        tools:targetApi="lollipop" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

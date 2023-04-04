@@ -9,17 +9,17 @@
         android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/editTextTextPersonName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="1dp"
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
             android:layout_weight="1"
@@ -30,32 +30,33 @@
             android:hint="@string/type_a_message"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textPersonName"
-            android:padding="8dp"
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
             android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/sendMsg"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="4dp"
             android:layout_marginStart="1dp"
             android:layout_marginLeft="1dp"
+            android:layout_marginTop="4dp"
+            android:contentDescription="@string/sendMsg"
             android:paddingBottom="5dp"
             android:src="@drawable/ic_paper_plane"
-            app:tintMode="src_in"
-            android:contentDescription="sendMsg" />
+            app:tintMode="src_in" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_above="@id/linear"
         android:layout_below="@id/toolbar"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
-        android:background="?android:attr/selectableItemBackground" />
+        android:background="?android:attr/selectableItemBackground"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -84,19 +85,17 @@
                 app:tint="#F3EEEE" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/profileImage"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:background="@drawable/round_white_bg"
                 android:src="@drawable/ic_user"
                 app:civ_border_color="@color/white"
+                android:layout_marginStart="24dp"
                 app:civ_border_width="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.023"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintStart_toEndOf="@+id/homeImg"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/userName"
@@ -105,61 +104,50 @@
                 android:layout_marginLeft="5dp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_horizontal|center_vertical"
-                android:paddingTop="4dp"
                 android:text="Name"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:drawableTint="#ECE7E7"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.05"
-                app:layout_constraintStart_toEndOf="@+id/profile_image"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.448" />
+                app:layout_constraintEnd_toStartOf="@id/phoneImage"
+                app:layout_constraintStart_toEndOf="@+id/profileImage"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/phoneImage"
                 android:layout_width="19dp"
                 android:layout_height="17dp"
+                android:layout_marginEnd="24dp"
                 android:src="@drawable/ic_call"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/imageView5"
-                app:layout_constraintHorizontal_bias="0.131"
-                app:layout_constraintStart_toEndOf="@+id/userName"
+                app:layout_constraintEnd_toStartOf="@+id/videoCamera"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.484"
                 app:tint="@color/white" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/videoCamera"
                 android:layout_width="23dp"
                 android:layout_height="20dp"
+                android:layout_marginEnd="24dp"
                 android:src="@drawable/ic_video_camera"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.294"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
+                app:layout_constraintEnd_toStartOf="@id/threeDots"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.47"
                 app:tint="@color/white" />
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/threeDots"
                 android:layout_width="18dp"
                 android:layout_height="27dp"
                 android:src="@drawable/ic_menu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.957"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.44"
                 app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
-
 
 </RelativeLayout>

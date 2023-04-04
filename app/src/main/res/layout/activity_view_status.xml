@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".viewmodel.ui.status.ViewStatusPage">
+    tools:context=".ui.status.ViewStatusPage">
 
     <ImageView
         android:id="@+id/statusImage"

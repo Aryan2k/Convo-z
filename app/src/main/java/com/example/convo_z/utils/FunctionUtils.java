@@ -1,6 +1,8 @@
 package com.example.convo_z.utils;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -8,7 +10,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.viewbinding.ViewBinding;
+
+import com.example.convo_z.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -146,5 +152,22 @@ public class FunctionUtils {
         }
         phones.close();
         return contacts;
+    }
+
+    public static ProgressDialog getProgressDialog(String title, String message, Context context) {
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
+        //  progressDialog.setProgressStyle(android.R.attr.progressBarStyleSmall);
+        Objects.requireNonNull(progressDialog.getWindow()).
+                setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.bg_progress_dialog));
+        return progressDialog;
+    }
+
+    public static Snackbar getSnackBar(String message, View view) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.dismiss, v -> {
+        });
+        return snackbar;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.convo_z.viewmodel.ui.status;
+package com.example.convo_z.ui.status;
 
 import static com.example.convo_z.R.color.colorPrimary;
 import static com.example.convo_z.R.color.colorPrimaryDark;
@@ -24,9 +24,11 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.convo_z.R;
+import com.example.convo_z.databinding.ActivityViewStatusBinding;
 import com.example.convo_z.model.User;
 import com.example.convo_z.repository.StatusRepository;
-import com.example.convo_z.viewmodel.ui.home.HomeActivity;
+import com.example.convo_z.ui.home.HomeActivity;
+import com.example.convo_z.utils.Constants;
 import com.example.convo_z.utils.FunctionUtils;
 import com.example.convo_z.viewmodel.status.ViewStatusViewModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,13 +66,14 @@ public class ViewStatusPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = ActivityViewStatusBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this).get(ViewStatusViewModel.class);
         new StatusRepository(); // to initialize firebase database instance
         loadUI();
         setUpListeners();
-        user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra(getString(R.string.user));
         assert user != null;
         statusList = user.getStatus();
 
@@ -80,25 +83,25 @@ public class ViewStatusPage extends AppCompatActivity {
 
             if (hm != null) {   // in case the story got deleted as soon as the status was opened
 
-                seen = (ArrayList<String>) hm.get("seen");
+                seen = (ArrayList<String>) hm.get(getString(R.string.seen));
                 assert seen != null;
                 if (!seen.contains(FirebaseAuth.getInstance().getUid()) || i == 1) {
 
                     item_to_pick = i;
 
                     Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(binding.profileImage);
-                    Picasso.get().load(String.valueOf(hm.get("link"))).placeholder(R.drawable.ic_user).into(binding.statusImage);
+                    Picasso.get().load(String.valueOf(hm.get(getString(R.string.link)))).placeholder(R.drawable.ic_user).into(binding.statusImage);
                     binding.userName.setText(user.getUserName());
-                    binding.captionTxt.setText(String.valueOf(hm.get("caption")));
+                    binding.captionTxt.setText(String.valueOf(hm.get(getString(R.string.caption))));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        binding.time.setText(FunctionUtils.timeSetter((String.valueOf(hm.get("time")))));
+                        binding.time.setText(FunctionUtils.timeSetter((String.valueOf(hm.get(getString(R.string.time))))));
                     }
 
                     if (!seen.contains(FirebaseAuth.getInstance().getUid())) {
                         seen.add(FirebaseAuth.getInstance().getUid());
-                        hm.put("seen", seen);
+                        hm.put(getString(R.string.seen), seen);
                         statusList.set(i, hm);
-                        viewModel.updateSeenList(user.getUserId(), statusList);
+                        viewModel.updateSeenList(user.getUserId(), statusList, this);
                     }
                     break;
                 }
@@ -126,7 +129,6 @@ public class ViewStatusPage extends AppCompatActivity {
     }
 
     private void loadUI() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(colorPrimaryDark));
@@ -211,15 +213,13 @@ public class ViewStatusPage extends AppCompatActivity {
         counter = 0;
         currentProgressBar = i;
         a = new Timer();
+
         TimerTask b = new TimerTask() {
             @Override
             public void run() {
-
                 if (!pauseTimer)
                     counter++;
-
                 p.setProgress(counter);
-
                 if (counter == 100 || DisplayForFirst) {
                     if (counter == 100)
                         a.cancel();
@@ -247,16 +247,16 @@ public class ViewStatusPage extends AppCompatActivity {
 
         if (hm != null) {  // in case the story got deleted as soon as the status was opened
             Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(binding.profileImage);
-            Picasso.get().load(String.valueOf(hm.get("link"))).placeholder(R.drawable.ic_user).into(binding.statusImage);
+            Picasso.get().load(String.valueOf(hm.get(getString(R.string.link)))).placeholder(R.drawable.ic_user).into(binding.statusImage);
             binding.userName.setText(user.getUserName());
-            binding.time.setText(FunctionUtils.timeSetter(String.valueOf(hm.get("time"))));
-            binding.captionTxt.setText(String.valueOf(hm.get("caption")));
+            binding.time.setText(FunctionUtils.timeSetter(String.valueOf(hm.get(getString(R.string.time)))));
+            binding.captionTxt.setText(String.valueOf(hm.get(getString(R.string.caption))));
 
             if (!seen.contains(FirebaseAuth.getInstance().getUid())) {
                 seen.add(FirebaseAuth.getInstance().getUid());
-                hm.put("seen", seen);
+                hm.put(getString(R.string.seen), seen);
                 statusList.set(i, hm);
-                viewModel.updateSeenList(user.getUserId(), statusList);
+                viewModel.updateSeenList(user.getUserId(), statusList, this);
             }
         } else {
             binding.captionTxt.setText(R.string.this_status_update_is_unavailable);
@@ -282,10 +282,8 @@ public class ViewStatusPage extends AppCompatActivity {
     }
 
     public void back() {
-        Intent intent = new Intent(ViewStatusPage.this, HomeActivity.class);
-        intent.putExtra("pager", 1.2);
-        intent.putExtra("progressDialog", "14");
-        startActivity(intent);
+        startActivity(new Intent(ViewStatusPage.this, HomeActivity.class)
+                .putExtra(getString(R.string.set_view_pager), Constants.CASE_STATUS_FRAGMENT));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.convo_z.viewmodel.ui.home.fragments;
+package com.example.convo_z.ui.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,9 +19,11 @@ import com.example.convo_z.R;
 import com.example.convo_z.adapters.StatusAdapters.MutedStatusAdapter;
 import com.example.convo_z.adapters.StatusAdapters.RecentStatusAdapter;
 import com.example.convo_z.adapters.StatusAdapters.ViewedStatusAdapter;
+import com.example.convo_z.databinding.FragmentStatusBinding;
 import com.example.convo_z.model.User;
-import com.example.convo_z.viewmodel.ui.status.AddStatusPage;
-import com.example.convo_z.viewmodel.ui.status.OwnStatusPage;
+import com.example.convo_z.ui.status.AddStatusPage;
+import com.example.convo_z.ui.status.OwnStatusPage;
+import com.example.convo_z.utils.Constants;
 import com.example.convo_z.utils.Data;
 import com.example.convo_z.utils.FunctionUtils;
 import com.example.convo_z.utils.Resource;
@@ -55,21 +57,21 @@ public class StatusFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentStatusBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(StatusFragmentViewModel.class);
         binding.mutedStatusRecyclerView.setVisibility(View.GONE);
 
-        handleLoadUserLiveData();
-        handleLoadAllStatusLiveData();
-
-        viewModel.getUser(FirebaseAuth.getInstance().getUid());
-
         binding.recentStatusRecyclerView.setAdapter(new RecentStatusAdapter(recentList, getContext()));
         binding.viewedStatusRecyclerView.setAdapter(new ViewedStatusAdapter(viewedList, getContext()));
         binding.mutedStatusRecyclerView.setAdapter(new MutedStatusAdapter(mutedList, getContext()));
+
+        setUpClickListeners();
+        handleLoadUserLiveData();
+        handleLoadAllStatusLiveData();
+
+        viewModel.getUser(FirebaseAuth.getInstance().getUid(), this.getContext());
 
         return binding.getRoot();
     }
@@ -79,10 +81,11 @@ public class StatusFragment extends Fragment {
         binding.ll1.setOnClickListener(view -> {
             Intent intent;
             if (loggedInUser.getStatus().size() > 1)
-                intent = new Intent(StatusFragment.this.getActivity(), OwnStatusPage.class);
+                intent = new Intent(StatusFragment.this.getContext(), OwnStatusPage.class);
             else
-                intent = new Intent(StatusFragment.this.getActivity(), AddStatusPage.class);
-            intent.putExtra("user", loggedInUser);
+                intent = new Intent(StatusFragment.this.getContext(), AddStatusPage.class)
+                        .putExtra(getString(R.string.previous_activity), Constants.CASE_HOME_ACTIVITY);
+            intent.putExtra(getString(R.string.user), loggedInUser);
             startActivity(intent);
         });
     }
@@ -102,23 +105,23 @@ public class StatusFragment extends Fragment {
 
                         binding.userNameList.setText(R.string.my_status);
                         assert hMap != null;
-                        String time = (String) hMap.get("time");
+                        String time = (String) hMap.get(getString(R.string.time));
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             binding.time.setText(FunctionUtils.timeSetter(time));
                         }
 
-                        Picasso.get().load((String) hMap.get("link")).placeholder(R.drawable.ic_user).into(binding.profileImage);
+                        Picasso.get().load((String) hMap.get(getString(R.string.link))).placeholder(R.drawable.ic_user).into(binding.profileImage);
                         binding.profileImage.setBorderColor(Color.WHITE);
                         binding.plus.setVisibility(View.GONE);
                         binding.profileImage.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.my_status_border));
 
                         setUpClickListeners();
-                        viewModel.loadAllStatus(recentList, viewedList, mutedList, getContext());
                     }
+                    viewModel.loadAllStatus(recentList, viewedList, mutedList, getContext());
                     break;
                 case EXCEPTION:
-                    //break;
+                    // break;
             }
         };
         viewModel.LoadUserLiveData.observe(getViewLifecycleOwner(), observer);
@@ -153,13 +156,11 @@ public class StatusFragment extends Fragment {
                     }
                     break;
                 case EXCEPTION:
-                    //break;
+                    // break;
             }
-
             Objects.requireNonNull(binding.recentStatusRecyclerView.getAdapter()).notifyDataSetChanged();  // notifies the adapter that a change has been made in the list (onBindViewHolder)
             Objects.requireNonNull(binding.viewedStatusRecyclerView.getAdapter()).notifyDataSetChanged();
             Objects.requireNonNull(binding.mutedStatusRecyclerView.getAdapter()).notifyDataSetChanged();
-
         };
         viewModel.LoadAllStatusLiveData.observe(getViewLifecycleOwner(), observer);
     }
@@ -176,5 +177,4 @@ public class StatusFragment extends Fragment {
             }
         }
     }
-
 }

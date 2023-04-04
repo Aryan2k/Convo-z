@@ -28,8 +28,8 @@ public class StatusFragmentViewModel extends ViewModel {
 
     public MutableLiveData<Resource<Data<User>>> LoadUserLiveData = new MutableLiveData<>();
 
-    public void getUser(String uId) {
-        repository.getUser(uId, LoadUserLiveData);
+    public void getUser(String uId, Context context) {
+        repository.getUser(uId, context, LoadUserLiveData);
     }
 
     public MutableLiveData<Resource<Data<Boolean>>> LoadAllStatusLiveData = new MutableLiveData<>();

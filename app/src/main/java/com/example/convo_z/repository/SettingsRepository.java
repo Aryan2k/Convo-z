@@ -1,10 +1,12 @@
 package com.example.convo_z.repository;
 
+import android.content.Context;
 import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.convo_z.R;
 import com.example.convo_z.model.User;
 import com.example.convo_z.utils.Data;
 import com.example.convo_z.utils.Resource;
@@ -35,8 +37,8 @@ public class SettingsRepository {
         storage = FirebaseStorage.getInstance();
     }
 
-    public void loadCurrentUser(MutableLiveData<Resource<Data<User>>> LoadCurrentUserLiveData) {
-        database.getReference().child("Users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
+    public void loadCurrentUser(Context context, MutableLiveData<Resource<Data<User>>> LoadCurrentUserLiveData) {
+        database.getReference().child(context.getResources().getString(R.string.users)).child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -52,15 +54,15 @@ public class SettingsRepository {
                 });
     }
 
-    public void updateCurrentUserTextFields(HashMap<String, Object> details, MutableLiveData<Resource<Data<User>>> UpdateCurrentUserTextFieldsLiveData) {
-        database.getReference().child("Users").child(Objects.requireNonNull(auth.getUid()))
+    public void updateCurrentUserTextFields(HashMap<String, Object> details, Context context, MutableLiveData<Resource<Data<User>>> UpdateCurrentUserTextFieldsLiveData) {
+        database.getReference().child((context.getResources().getString(R.string.users))).child(Objects.requireNonNull(auth.getUid()))
                 .updateChildren(details).addOnSuccessListener(aVoid -> UpdateCurrentUserTextFieldsLiveData.setValue(resource.success(new Data<>())));
     }
 
-    public void updateCurrentUserProfilePhoto(Uri sFile, MutableLiveData<Resource<Data<User>>> UpdateCurrentUserProfilePhotoLiveData) {
-        final StorageReference reference = storage.getReference().child("profile_pictures").child(Objects.requireNonNull(auth.getUid()));
-        reference.putFile(sFile).addOnSuccessListener(taskSnapshot -> reference.getDownloadUrl().addOnSuccessListener(uri -> database.getReference().child("Users").child(auth.getUid())
-                .child("profilePic").setValue(uri.toString())));
+    public void updateCurrentUserProfilePhoto(Uri sFile, Context context, MutableLiveData<Resource<Data<User>>> UpdateCurrentUserProfilePhotoLiveData) {
+        final StorageReference reference = storage.getReference().child(context.getResources().getString(R.string.profile_pictures)).child(Objects.requireNonNull(auth.getUid()));
+        reference.putFile(sFile).addOnSuccessListener(taskSnapshot -> reference.getDownloadUrl().addOnSuccessListener(uri -> database.getReference()
+                .child((context.getResources().getString(R.string.users))).child(auth.getUid()).child((context.getResources().getString(R.string.profile_pic))).setValue(uri.toString())));
         UpdateCurrentUserProfilePhotoLiveData.setValue(resource.success(new Data<>()));
     }
 }

@@ -21,23 +21,23 @@
         tools:replace="android:allowBackup"
         tools:targetApi="s">
 
-        <activity android:name=".viewmodel.ui.status.OwnStatusPage" />
-        <activity android:name=".viewmodel.ui.status.StatusPrivacyPage" />
+        <activity android:name=".ui.status.OwnStatusPage" />
+        <activity android:name=".ui.status.StatusPrivacyPage" />
         <activity
-            android:name=".viewmodel.ui.status.ViewStatusPage"
+            android:name=".ui.status.ViewStatusPage"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity android:name=".viewmodel.ui.settings.ProfileSettingsActivity" />
+        <activity android:name=".ui.settings.ProfileSettingsActivity" />
         <activity
-            android:name=".viewmodel.ui.home.HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-        <activity android:name=".viewmodel.ui.authentication.SignupActivity" />
-        <activity android:name=".viewmodel.ui.authentication.LoginActivity" />
-        <activity android:name=".viewmodel.ui.chat.ChatActivity" />
-        <activity android:name=".viewmodel.ui.verification.PhoneVerificationPage" />
-        <activity android:name=".viewmodel.ui.verification.OTPVerificationPage" />
-        <activity android:name=".viewmodel.ui.status.AddStatusPage" />
+        <activity android:name=".ui.authentication.SignupActivity" />
+        <activity android:name=".ui.authentication.LoginActivity" />
+        <activity android:name=".ui.chat.ChatActivity" />
+        <activity android:name=".ui.verification.PhoneVerificationPage" />
+        <activity android:name=".ui.verification.OTPVerificationPage" />
+        <activity android:name=".ui.status.AddStatusPage" />
         <activity
-            android:name=".viewmodel.ui.splash.SplashScreenActivity"
+            android:name=".ui.splash.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,9 +1,10 @@
-package com.example.convo_z.viewmodel.ui.status;
+package com.example.convo_z.ui.status;
 
 import static com.example.convo_z.R.color.colorPrimary;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,7 +22,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +34,8 @@ import com.example.convo_z.R;
 import com.example.convo_z.adapters.SeenListAdapter;
 import com.example.convo_z.databinding.ActivityOwnStatusBinding;
 import com.example.convo_z.model.User;
-import com.example.convo_z.viewmodel.ui.home.HomeActivity;
+import com.example.convo_z.ui.home.HomeActivity;
+import com.example.convo_z.utils.Constants;
 import com.example.convo_z.utils.Data;
 import com.example.convo_z.utils.FunctionUtils;
 import com.example.convo_z.utils.Resource;
@@ -64,33 +65,38 @@ public class OwnStatusPage extends AppCompatActivity {
     int currentStatus = 1;
     boolean pauseTimer = false, pauseSupport = false;
     Timer a = new Timer();
-    RecyclerView rv;
+    RecyclerView seenRecyclerView;
     ArrayList<HashMap<String, Object>> statusList = new ArrayList<>();
     ArrayList<User> seenList = new ArrayList<>();
+    ProgressDialog progressDialog;
     ActivityOwnStatusBinding binding;
 
-    @SuppressLint({"SetTextI18n", "NotifyDataSetChanged", "UseCompatLoadingForDrawables"})
+    @SuppressLint({"NotifyDataSetChanged", "UseCompatLoadingForDrawables"})
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = ActivityOwnStatusBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         viewModel = new ViewModelProvider(this).get(OwnStatusViewModel.class);
         loadUI();
+        seenRecyclerView = new RecyclerView(OwnStatusPage.this);
         setUpListeners();
         handleUpdateStatusListLiveData();
 
-        user = (User) getIntent().getSerializableExtra("user");
+        user = (User) getIntent().getSerializableExtra(getString(R.string.user));
         assert user != null;
         statusList = user.getStatus();
         HashMap<String, Object> hm = statusList.get(statusList.size() - 1);
-        binding.captionTxt.setText(String.valueOf(hm.get("caption")));
+        binding.captionTxt.setText(String.valueOf(hm.get(getString(R.string.caption))));
         Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(binding.profileImage);
-        Picasso.get().load(String.valueOf(hm.get("link"))).placeholder(R.drawable.ic_user).into(binding.statusImage);
-        binding.userName.setText("You");
-        String time = String.valueOf(hm.get("time"));
+        Picasso.get().load(String.valueOf(hm.get(getString(R.string.link)))).placeholder(R.drawable.ic_user).into(binding.statusImage);
+        binding.userName.setText(getString(R.string.you));
+        String time = String.valueOf(hm.get(getString(R.string.time)));
+        progressDialog = FunctionUtils.getProgressDialog(getString(R.string.deleting_status), getString(R.string.deleting_this_status_update), this);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.time.setText(FunctionUtils.timeSetter(time));
         }
@@ -121,7 +127,6 @@ public class OwnStatusPage extends AppCompatActivity {
     }
 
     private void loadUI() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -139,6 +144,7 @@ public class OwnStatusPage extends AppCompatActivity {
     @SuppressLint({"ClickableViewAccessibility", "UseCompatLoadingForDrawables", "NotifyDataSetChanged"})
     private void setUpListeners() {
         binding.homeImg.setOnClickListener(view -> back());
+
         binding.rl.setOnClickListener(view -> {
             if (!pauseTimer)
                 back();
@@ -149,26 +155,28 @@ public class OwnStatusPage extends AppCompatActivity {
                 pauseTimer = false;
             }
         });
+
         binding.delete.setOnClickListener(view -> {
             pauseTimer = true;
-            String message = "Deleted status updates cannot be recovered.";
+            String message = getString(R.string.deleted_status_updates_cannot_be_recovered);
             AlertDialog alertDialog = new AlertDialog.Builder(OwnStatusPage.this)
-                    .setTitle("Delete this status update?")
+                    .setTitle(getString(R.string.delete_this_status_update))
                     .setMessage(Html.fromHtml("<font color='#808080'>" + message + "</font>"))
-                    .setPositiveButton("Yes", (dialog, which) -> {
+                    .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
                         // updated in db
                         dialog.dismiss();
-                        viewModel.backupDeletedStatus(user.getUserId(), statusList.get(currentStatus));
+                        progressDialog.show();
+                        viewModel.backupDeletedStatus(user.getUserId(), statusList.get(currentStatus), this);
                         statusList.remove(currentStatus);
                         user.setStatus(statusList);
-                        viewModel.updateStatusList(user.getUserId(), statusList);
-
-                    }).setNegativeButton("Cancel", (dialog, which) -> {
+                        viewModel.updateStatusList(user.getUserId(), statusList, this);
+                    }).setNegativeButton(getString(R.string.cancel), (dialog, which) -> {
                         dialog.dismiss();
                         pauseTimer = false;
                     }).show();
             alertDialog.setOnDismissListener(dialogInterface -> pauseTimer = false);
         });
+
         binding.seen.setOnClickListener(view -> {
 
             if (!pauseTimer) {
@@ -178,44 +186,42 @@ public class OwnStatusPage extends AppCompatActivity {
                 pauseTimer = true;
 
                 HashMap<String, Object> hm1 = statusList.get(currentStatus);
-                ArrayList<String> seen = (ArrayList<String>) hm1.get("seen");
+                ArrayList<String> seen = (ArrayList<String>) hm1.get(getString(R.string.seen));
 
-                rv = new RecyclerView(OwnStatusPage.this);
                 RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 
-                rv.setLayoutParams(params);
+                seenRecyclerView.setLayoutParams(params);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    rv.setBackground(getDrawable(R.drawable.seen_recycler_view_bg));
+                    seenRecyclerView.setBackground(getDrawable(R.drawable.seen_recycler_view_bg));
                 }
 
                 LinearLayoutManager llm = new LinearLayoutManager(OwnStatusPage.this);
                 SeenListAdapter adapter = new SeenListAdapter(seenList, getApplicationContext());
-                rv.setAdapter(adapter);
-                rv.setLayoutManager(llm);
-                rv.setVisibility(View.VISIBLE);
+                seenRecyclerView.setAdapter(adapter);
+                seenRecyclerView.setLayoutManager(llm);
+                seenRecyclerView.setVisibility(View.VISIBLE);
 
                 seenList.clear();
 
                 User dummy = new User();
 
-                String msg = "Seen by: ";
+                String msg = getString(R.string.seen_by);
                 dummy.setUserName(msg);
                 seenList.add(dummy);
-                viewModel.loadSeenList(seen, seenList, adapter);
+                viewModel.loadSeenList(seen, seenList, adapter, this);
                 // create the popup window
                 int width = LinearLayout.LayoutParams.WRAP_CONTENT;
                 int height = LinearLayout.LayoutParams.WRAP_CONTENT;
                 boolean focusable = false; // true = tapping outside the popup also dismisses it
-                popupWindow = new PopupWindow(rv, width, height, focusable);
+                popupWindow = new PopupWindow(seenRecyclerView, width, height, focusable);
                 popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
             }
         });
-        binding.newStatus.setOnClickListener(view -> {
-            Intent i = new Intent(OwnStatusPage.this, AddStatusPage.class);
-            i.putExtra("code", 8.8);
-            i.putExtra("user", user);
-            startActivity(i);
-        });
+
+        binding.newStatus.setOnClickListener(view -> startActivity(new Intent(OwnStatusPage.this, AddStatusPage.class)
+                .putExtra(getString(R.string.previous_activity), Constants.CASE_OWN_STATUS_PAGE)
+                .putExtra(getString(R.string.user), user)));
+
         binding.buttonLeft.setOnClickListener(view -> {
 
             if (popupWindow != null)
@@ -229,6 +235,7 @@ public class OwnStatusPage extends AppCompatActivity {
                 runProgressBar(currentProgressBar - 1, true);
             }
         });
+
         binding.buttonRight.setOnClickListener(view -> {
 
             if (popupWindow != null)
@@ -244,14 +251,13 @@ public class OwnStatusPage extends AppCompatActivity {
             }
         });
         // dismiss the popup window when touched
-        rv.setOnTouchListener((v, event) -> {
-
+        seenRecyclerView.setOnTouchListener((v, event) -> {
             if (popupWindow != null)
                 popupWindow.dismiss();
-
             pauseTimer = false;
             return true;
         });
+
         binding.rl.setOnLongClickListener(view -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 disableLayout();
@@ -260,6 +266,7 @@ public class OwnStatusPage extends AppCompatActivity {
             isButtonLongPressed = true;
             return true;
         });
+
         binding.rl.setOnTouchListener((view, motionEvent) -> {
             view.onTouchEvent(motionEvent);
 
@@ -279,6 +286,7 @@ public class OwnStatusPage extends AppCompatActivity {
             }
             return true;
         });
+
         binding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(
                 () -> {
                     Rect r = new Rect();
@@ -308,22 +316,18 @@ public class OwnStatusPage extends AppCompatActivity {
         currentProgressBar = i;
 
         a = new Timer();
+
         TimerTask b = new TimerTask() {
             @Override
             public void run() {
-
                 if (!pauseTimer)
                     counter++;
-
                 p.setProgress(counter);
-
                 if (counter == 100 || DisplayForFirst) {
-
                     if (counter == 100)
                         a.cancel();
 
                     if (i + 1 <= statusList.size() - 1) {  //equal to just to update ui for last status (do dry run for 2 viewed status)
-
                         if (DisplayForFirst) {
                             Executor mainExecutor = ContextCompat.getMainExecutor(getApplicationContext());
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -346,21 +350,20 @@ public class OwnStatusPage extends AppCompatActivity {
                 case LOADING:
                     break;
                 case SUCCESS:
-                    Toast.makeText(getApplicationContext(), "Status Deleted!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(OwnStatusPage.this, HomeActivity.class);
-                    intent.putExtra("pager", 1.2);
-                    intent.putExtra("progressDialog", "14");
-                    startActivity(intent);
+                    progressDialog.dismiss();
+                    FunctionUtils.getSnackBar(getString(R.string.status_deleted), binding.getRoot()).show();
+                    startActivity(new Intent(OwnStatusPage.this, HomeActivity.class)
+                            .putExtra(getString(R.string.set_view_pager), Constants.CASE_STATUS_FRAGMENT));
                     break;
                 case EXCEPTION:
-                    Toast.makeText(getApplicationContext(), resource.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    FunctionUtils.getSnackBar(resource.getMessage(), binding.getRoot()).show();
                     break;
             }
         };
         viewModel.UpdateStatusListLiveData.observe(this, observer);
     }
 
-    @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void displayStatus(int i) {
         currentStatus = i;
@@ -368,14 +371,14 @@ public class OwnStatusPage extends AppCompatActivity {
 
         if (hm != null) {
             Picasso.get().load(user.getProfilePic()).placeholder(R.drawable.ic_user).into(binding.profileImage);
-            Picasso.get().load(String.valueOf(hm.get("link"))).placeholder(R.drawable.ic_user).into(binding.statusImage);
-            binding.userName.setText("You");
+            Picasso.get().load(String.valueOf(hm.get(getString(R.string.link)))).placeholder(R.drawable.ic_user).into(binding.statusImage);
+            binding.userName.setText(getString(R.string.you));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                binding.time.setText(FunctionUtils.timeSetter(String.valueOf(hm.get("time"))));
+                binding.time.setText(FunctionUtils.timeSetter(String.valueOf(hm.get(getString(R.string.time)))));
             }
-            binding.captionTxt.setText(String.valueOf(hm.get("caption")));
+            binding.captionTxt.setText(String.valueOf(hm.get(getString(R.string.caption))));
         } else {
-            binding.captionTxt.setText("This status update is unavailable.");
+            binding.captionTxt.setText(getString(R.string.this_status_update_is_unavailable));
         }
     }
 
@@ -398,10 +401,8 @@ public class OwnStatusPage extends AppCompatActivity {
     }
 
     public void back() {
-        Intent intent = new Intent(OwnStatusPage.this, HomeActivity.class);
-        intent.putExtra("pager", 1.2);
-        intent.putExtra("progressDialog", "14");
-        startActivity(intent);
+        startActivity(new Intent(OwnStatusPage.this, HomeActivity.class)
+                .putExtra(getString(R.string.set_view_pager), Constants.CASE_STATUS_FRAGMENT));
     }
 
     @Override

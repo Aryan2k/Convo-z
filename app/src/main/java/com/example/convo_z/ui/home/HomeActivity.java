@@ -1,20 +1,17 @@
-package com.example.convo_z.viewmodel.ui.home;
+package com.example.convo_z.ui.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -24,12 +21,16 @@ import androidx.core.content.ContextCompat;
 
 import com.example.convo_z.R;
 import com.example.convo_z.adapters.FragmentsAdapter;
+import com.example.convo_z.databinding.ActivityHomeBinding;
 import com.example.convo_z.repository.HomeRepository;
-import com.example.convo_z.viewmodel.ui.authentication.LoginActivity;
-import com.example.convo_z.viewmodel.ui.settings.ProfileSettingsActivity;
+import com.example.convo_z.ui.authentication.LoginActivity;
+import com.example.convo_z.ui.settings.ProfileSettingsActivity;
+import com.example.convo_z.utils.Constants;
+import com.example.convo_z.utils.FunctionUtils;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -37,10 +38,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class HomeActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
-    FirebaseAuth auth;
-    ProgressDialog progressDialog;
-    Double pager = 0.0;
+    ActivityHomeBinding binding;
+    Serializable setViewPager;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -48,13 +47,25 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         new HomeRepository(); // to initialise firebase database instance.
 
         Objects.requireNonNull(getSupportActionBar()).setBackgroundDrawable(getDrawable(R.color.colorAccent));
         Objects.requireNonNull(getSupportActionBar()).setElevation(0);
 
+        loadWindowParams();
+
+        if (getIntent().hasExtra(getString(R.string.set_view_pager)))
+            setViewPager = getIntent().getSerializableExtra(getString(R.string.set_view_pager));
+
+        ActivityCompat.requestPermissions(HomeActivity.this,
+                new String[]{Manifest.permission.READ_CONTACTS},
+                1);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void loadWindowParams() {
         Window window = HomeActivity.this.getWindow();
         // clear FLAG_TRANSLUCENT_STATUS flag:
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -65,16 +76,6 @@ public class HomeActivity extends AppCompatActivity {
         //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(R.drawable.core_colour2));
         //<gradient android:startColor="#333440" android:endColor="#333440"
         //  binding.viewPager.setOffscreenPageLimit(1);
-
-        auth = FirebaseAuth.getInstance();
-
-        Intent i = getIntent();
-        if (i.hasExtra("pager"))
-            pager = i.getDoubleExtra("pager", 0.0);
-
-        ActivityCompat.requestPermissions(HomeActivity.this,
-                new String[]{Manifest.permission.READ_CONTACTS},
-                1);
     }
 
     @Override
@@ -90,10 +91,8 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.settings:
-
-                Intent in = new Intent(HomeActivity.this, ProfileSettingsActivity.class);
-                in.putExtra("disableHome", "10");
-                startActivity(in);
+                startActivity(new Intent(HomeActivity.this, ProfileSettingsActivity.class)
+                        .putExtra(getString(R.string.disable_home_button), Constants.CASE_DO_NOT_DISABLE_HOME));
                 break;
 
             case R.id.security:
@@ -102,9 +101,9 @@ public class HomeActivity extends AppCompatActivity {
 
             case R.id.logout:
 
-                auth.signOut();
-                SharedPreferences sp = getSharedPreferences("login", MODE_PRIVATE);
-                sp.edit().putInt("lc", 0).apply();
+                FirebaseAuth.getInstance().signOut();
+                SharedPreferences sp = getSharedPreferences(getString(R.string.login), MODE_PRIVATE);
+                sp.edit().putInt(getString(R.string.login_check), 0).apply();
                 startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                 break;
         }
@@ -112,50 +111,27 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {// If request is cancelled, the result arrays are empty.
+        if (requestCode == 1) {  // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 // permission was granted!.
-
                 binding.viewPager.setAdapter((new FragmentsAdapter(getSupportFragmentManager(), getLifecycle())));
-
-                new TabLayoutMediator(binding.tablayout, binding.viewPager,
+                new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                         (tab, position) -> {
-                            String[] tabTitles = {"CHATS", "STATUS", "CALLS"};
+                            String[] tabTitles = {getString(R.string.chats_all_capital), getString(R.string.status_all_capital), getString(R.string.calls_all_capital)};
                             tab.setText(tabTitles[position]);
                         }).attach();
-
-                if (pager == 1.2)
+                if (setViewPager != null && setViewPager.equals(Constants.CASE_STATUS_FRAGMENT))
                     binding.viewPager.setCurrentItem(1);
-
-                Intent i = getIntent();
-                String progressDialogRemover = i.getStringExtra("progressDialog");
-
-                if (progressDialogRemover == null) {  //better way to prevent crashes than passing dummy values
-
-                    progressDialog = new ProgressDialog(HomeActivity.this);
-                    progressDialog.setTitle("Loading");
-                    progressDialog.setMessage("Getting things ready asap!");
-                    progressDialog.show();
-
-                    Runnable progressRunnable = () -> progressDialog.dismiss();
-
-                    Handler pdCanceller = new Handler();
-                    pdCanceller.postDelayed(progressRunnable, 2000);
-                }
-
-            } else {
-                // permission denied, boo! Disable the
-                // functionality that depends on this permission
-                Toast.makeText(HomeActivity.this, "PERMISSION DENIED: Cannot Open Contacts", Toast.LENGTH_SHORT).show();
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
+        } else {
+            // permission denied, boo! Disable the functionality that depends on this permission
+            FunctionUtils.getSnackBar(getString(R.string.permission_denied_cannot_open_contacts), binding.getRoot()).show();
         }
+        // other 'case' lines to check for other
+        // permissions this app might request
     }
 
     @Override

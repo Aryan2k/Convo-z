@@ -1,5 +1,7 @@
 package com.example.convo_z.viewmodel.status;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -25,16 +27,17 @@ public class OwnStatusViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public void backupDeletedStatus(String userId, HashMap<String, Object> status) {
-        repository.backupDeletedStatus(userId, status);
+    public void backupDeletedStatus(String userId, HashMap<String, Object> status, Context context) {
+        repository.backupDeletedStatus(userId, status, context);
     }
 
-    public void loadSeenList(ArrayList<String> seen, ArrayList<User> seenList, SeenListAdapter adapter) {
-        repository.loadSeenList(seen, seenList, adapter);
+    public void loadSeenList(ArrayList<String> seen, ArrayList<User> seenList, SeenListAdapter adapter, Context context) {
+        repository.loadSeenList(seen, seenList, adapter, context);
     }
 
     public MutableLiveData<Resource<Data<User>>> UpdateStatusListLiveData = new MutableLiveData<>();
-    public void updateStatusList(String userId, ArrayList<HashMap<String, Object>> statusList) {
-        repository.updateStatusList(userId, statusList, UpdateStatusListLiveData);
+
+    public void updateStatusList(String userId, ArrayList<HashMap<String, Object>> statusList, Context context) {
+        repository.updateStatusList(userId, statusList, context, UpdateStatusListLiveData);
     }
 }

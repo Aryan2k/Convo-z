@@ -1,26 +1,26 @@
-package com.example.convo_z.viewmodel.ui.authentication;
+package com.example.convo_z.ui.authentication;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.convo_z.R;
+import com.example.convo_z.databinding.ActivityLoginBinding;
 import com.example.convo_z.model.User;
 import com.example.convo_z.repository.AuthenticationRepository;
-import com.example.convo_z.viewmodel.ui.home.HomeActivity;
-import com.example.convo_z.viewmodel.ui.settings.ProfileSettingsActivity;
-import com.example.convo_z.viewmodel.ui.verification.PhoneVerificationPage;
+import com.example.convo_z.ui.home.HomeActivity;
+import com.example.convo_z.ui.settings.ProfileSettingsActivity;
+import com.example.convo_z.ui.verification.PhoneVerificationPage;
 import com.example.convo_z.utils.Constants;
 import com.example.convo_z.utils.Data;
+import com.example.convo_z.utils.FunctionUtils;
 import com.example.convo_z.utils.Resource;
 import com.example.convo_z.viewmodel.authentication.LoginActivityViewModel;
 import com.google.android.gms.auth.api.identity.Identity;
@@ -63,28 +63,16 @@ public class LoginActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         oneTapClient = Identity.getSignInClient(this);
         new AuthenticationRepository();  // to initialize firebase database and auth instances
-        setUpProgressDialog();
+        progressDialog = FunctionUtils.getProgressDialog(getString(R.string.signing_in_user), getString(R.string.we_are_signing_you_in), this);
         setUpClickListeners();
         handleEmailAndPasswordSignInLiveData();
         handleProfileStatusLiveData();
     }
 
-    private void setUpProgressDialog() {
-        progressDialog = new ProgressDialog(LoginActivity.this);
-        progressDialog.setTitle("Signing in user");
-        progressDialog.setMessage("We're signing you in!");
-        //  progressDialog.setProgressStyle(android.R.attr.progressBarStyleSmall);
-        Objects.requireNonNull(progressDialog.getWindow()).
-                setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.bg_progress_dialog));
-    }
-
     private void setUpClickListeners() {
         binding.signupTxt.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignupActivity.class)));
-        binding.signinPhone.setOnClickListener(v -> {
-            Intent i = new Intent(LoginActivity.this, PhoneVerificationPage.class);
-            i.putExtra("code", "22"); // dummy value to avoid crash
-            startActivity(i);
-        });
+        binding.signinPhone.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, PhoneVerificationPage.class)
+                .putExtra(getString(R.string.login_status), Constants.CASE_SIGN_IN_OR_SIGN_UP)));
         binding.google.setOnClickListener(v -> googleSignIn());
         binding.signin.setOnClickListener(v -> {
             if (!binding.email.getText().toString().isEmpty() && !binding.password.getText().toString().isEmpty()) {
@@ -97,14 +85,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setSignInFieldErrors() {
         if (binding.email.getText().toString().trim().isEmpty() && !binding.password.getText().toString().trim().isEmpty()) {
-            binding.email.setError("Enter your email");
+            binding.email.setError(getString(R.string.enter_your_email));
             binding.email.requestFocus();
         } else if (!binding.email.getText().toString().trim().isEmpty() && binding.password.getText().toString().trim().isEmpty()) {
-            binding.password.setError("Enter your password");
+            binding.password.setError(getString(R.string.enter_your_password));
             binding.password.requestFocus();
         } else {
-            binding.email.setError("Enter your email");
-            binding.password.setError("Enter your password");
+            binding.email.setError(getString(R.string.enter_your_email));
+            binding.password.setError(getString(R.string.enter_your_password));
             binding.email.requestFocus();
             binding.password.requestFocus();
         }
@@ -122,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                                 .addOnCompleteListener(this, task -> {
                                     if (task.isSuccessful()) {
                                         final FirebaseUser user = auth.getCurrentUser();
-                                        database.getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        database.getReference().child(getString(R.string.users)).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override                 // to check if the user has already signed up with that google account
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 assert user != null;
@@ -136,25 +124,25 @@ public class LoginActivity extends AppCompatActivity {
                                                     ArrayList<String> hidden = new ArrayList<>();
 
                                                     HashMap<String, Object> s = new HashMap<>();
-                                                    s.put("dummy", "");
+                                                    s.put(getString(R.string.dummy), getString(R.string.empty_string));
                                                     status.add(s);
-                                                    muted.add("");
-                                                    blocked.add("");
-                                                    hidden.add("");
+                                                    muted.add(getString(R.string.empty_string));
+                                                    blocked.add(getString(R.string.empty_string));
+                                                    hidden.add(getString(R.string.empty_string));
 
                                                     newUser.setMuted(muted);
                                                     newUser.setStatus(status);
                                                     newUser.setBlocked(blocked);
                                                     newUser.setHidden(hidden);
-                                                    newUser.setBio("");
-                                                    newUser.setLastSeen("");
+                                                    newUser.setBio(getString(R.string.empty_string));
+                                                    newUser.setLastSeen(getString(R.string.empty_string));
                                                     newUser.setEmail(user.getEmail());
-                                                    //users.setPassword("");
+                                                    // users.setPassword("");
                                                     newUser.setUserId(user.getUid());
                                                     newUser.setUserName(user.getDisplayName());
                                                     newUser.setProfilePic(Objects.requireNonNull(user.getPhotoUrl()).toString());
 
-                                                    database.getReference().child("Users").child(user.getUid()).setValue(newUser);
+                                                    database.getReference().child(getString(R.string.users)).child(user.getUid()).setValue(newUser);
                                                 }
                                             }
 
@@ -166,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                         viewModel.checkProfileStatus(Objects.requireNonNull(auth.getCurrentUser()).getUid(), getApplicationContext());
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).toString(), Toast.LENGTH_SHORT).show();
+                                        FunctionUtils.getSnackBar(Objects.requireNonNull(task.getException()).toString(), binding.getRoot()).show();
                                     }
                                 });
                     }
@@ -190,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                     viewModel.checkProfileStatus(auth.getUid(), getApplicationContext());
                     break;
                 case EXCEPTION:
-                    Toast.makeText(getApplicationContext(), resource.getMessage(), Toast.LENGTH_SHORT).show();
+                    FunctionUtils.getSnackBar(resource.getMessage(), binding.getRoot()).show();
                     progressDialog.dismiss();
                     break;
             }
@@ -203,13 +191,12 @@ public class LoginActivity extends AppCompatActivity {
             progressDialog.dismiss();
             switch (profileStatus) {
                 case CASE_PROFILE_UP_TO_DATE:
-                    Toast.makeText(getApplicationContext(), "Sign in successful!", Toast.LENGTH_SHORT).show();
+                    FunctionUtils.getSnackBar(getString(R.string.sign_in_successful), binding.getRoot()).show();
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     break;
                 case CASE_GOOGLE_OR_EMAIL_SIGNUP:   //  Phone Number Verification Pending
-                    Intent i = new Intent(LoginActivity.this, PhoneVerificationPage.class);
-                    i.putExtra("code", "44");  // determines if this is an account linking case or new a independent signin/up using phone
-                    startActivity(i);
+                    startActivity(new Intent(LoginActivity.this, PhoneVerificationPage.class)
+                            .putExtra(getString(R.string.login_status), Constants.CASE_ACCOUNT_LINKING));  // determines if this is an account linking case or new a independent signin/up using phone
                     break;
                 case CASE_PHONE_SIGNUP:   //  User Details Submission Pending
                     startActivity(new Intent(LoginActivity.this, ProfileSettingsActivity.class));
